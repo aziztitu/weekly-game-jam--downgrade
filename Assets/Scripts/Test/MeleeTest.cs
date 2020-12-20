@@ -17,7 +17,7 @@ public class MeleeTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            anim.SetTrigger("spearStab");
+            anim.SetTrigger("slash");
         }
 
         if (Input.GetKeyDown(KeyCode.S))
