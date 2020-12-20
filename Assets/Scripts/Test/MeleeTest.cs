@@ -9,7 +9,7 @@ public class MeleeTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -17,22 +17,27 @@ public class MeleeTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-
+            anim.SetTrigger("spearStab");
         }
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-
+            anim.SetTrigger("shieldBlock");
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-
+            anim.SetTrigger("left");
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
+            anim.SetTrigger("right");
+        }
 
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            anim.SetTrigger("parryKick");
         }
     }
 }
