@@ -18,6 +18,8 @@ public class CharacterModel : MonoBehaviour
     public CharacterInput characterInput = new CharacterInput();
     
     public CharacterMovementController characterMovementController { get; private set; }
+    public MeleeTest characterMeleeController { get; private set; }
+    public CharacterAnimEventHandler characterAnimEventHandler { get; private set; }
     public Animator animator { get; private set; }
     public Health health { get; private set; }
     public bool isAlive => health.currentHealth > 0;
@@ -39,7 +41,9 @@ public class CharacterModel : MonoBehaviour
     void Awake()
     {
         characterMovementController = GetComponent<CharacterMovementController>();
+        characterMeleeController = GetComponent<MeleeTest>();
         animator = GetComponentInChildren<Animator>(false);
+        characterAnimEventHandler = animator.GetComponent<CharacterAnimEventHandler>();
         health = GetComponent<Health>();
         health.OnDamageTaken.AddListener(() =>
         {

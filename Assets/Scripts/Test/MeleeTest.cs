@@ -21,11 +21,13 @@ public class MeleeTest : MonoBehaviour
     [Button("Try Shield", "TryShield")] [SerializeField]
     private bool _btnTryShield;
 
-    public bool isShielding => characterModel.characterInput.IsBlocking;
+    public bool isShielding => !isAttackSequenceActive && characterModel.characterInput.IsBlocking;
     private bool wasShielding = false;
     private float lastShieldStartTime = 0;
     public float timeSinceLastShieldStartTime => Time.time - lastShieldStartTime;
     public bool isInParryWindow => timeSinceLastShieldStartTime < parryWindow;
+
+    public bool isAttackSequenceActive { get; private set; } = false;
 
     private void Awake()
     {
@@ -36,6 +38,17 @@ public class MeleeTest : MonoBehaviour
     void Start()
     {
         OnWeaponSwitched();
+
+        characterModel.characterAnimEventHandler.onMeleeAttackSequenceStarted +=
+            () => { this.isAttackSequenceActive = true; };
+        characterModel.characterAnimEventHandler.onMeleeAttackSequenceEnded +=
+            () => { this.isAttackSequenceActive = false; };
+
+        characterModel.characterAnimEventHandler.onMeleeAttackStarted += (int comboIndex, float damage) =>
+        {
+            UpdateWeaponCollider(true);
+        };
+        characterModel.characterAnimEventHandler.onMeleeAttackEnded += () => { UpdateWeaponCollider(false); };
     }
 
     void OnDrawGizmos()
@@ -49,10 +62,16 @@ public class MeleeTest : MonoBehaviour
     {
         if (characterModel.characterInput.LightAttack)
         {
-            anim.SetTrigger("slash");
-            if (weaponCollider)
+            if (isAttackSequenceActive)
             {
-                weaponCollider.enabled = true;
+                if (characterModel.characterAnimEventHandler.checkingComboContinue)
+                {
+                    anim.SetTrigger("ContinueCombo");
+                }
+            }
+            else
+            {
+                anim.SetTrigger("Attack");
             }
         }
 
@@ -61,7 +80,7 @@ public class MeleeTest : MonoBehaviour
             lastShieldStartTime = Time.time;
         }
 
-        anim.SetBool("isShielding", isShielding);
+        anim.SetBool("IsShielding", isShielding);
         wasShielding = isShielding;
 
         /*if (Input.GetKeyDown(KeyCode.Q))
@@ -80,6 +99,10 @@ public class MeleeTest : MonoBehaviour
         }
 
         */
+    }
+
+    void OnDestroy()
+    {
     }
 
     public void Parry()
@@ -122,8 +145,11 @@ public class MeleeTest : MonoBehaviour
         }
     }
 
-    public void DisableWeaponCollider()
+    public void UpdateWeaponCollider(bool enable)
     {
-        weaponCollider.enabled = false;
+        if (weaponCollider)
+        {
+            weaponCollider.enabled = enable;
+        }
     }
 }

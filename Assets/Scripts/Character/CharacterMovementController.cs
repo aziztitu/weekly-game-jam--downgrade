@@ -293,11 +293,13 @@ public class CharacterMovementController : MonoBehaviour
     {
         CharacterModel.CharacterInput playerInput = characterModel.characterInput;
 
-        /*if (characterModel.isMeleeAttacking)
+        if (characterModel.characterMeleeController.isAttackSequenceActive)
         {
-            playerInput.Move = new Vector3(0, 0, 0);
-//            curSpeed = 0;
-        }*/
+            //playerInput.Move = new Vector3(0, 0, 0);
+            //curSpeed = 0;
+            speed = 0;
+            return;
+        }
 
         // Read input
 
