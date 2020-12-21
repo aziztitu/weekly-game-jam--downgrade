@@ -1463,6 +1463,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 5734426434373382001}
+  currentShield: {fileID: 0}
+  shieldingAngle: 45
+  attackerPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &6397696900479585495
 GameObject:
   m_ObjectHideFlags: 0

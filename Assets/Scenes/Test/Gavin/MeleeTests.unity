@@ -247,10 +247,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1726796313}
     - target: {fileID: 5447564086658427481, guid: 24cab29cfe269e147a2c1bc5ac2d834e, type: 3}
-      propertyPath: shieldingAngle
-      value: 45
-      objectReference: {fileID: 0}
-    - target: {fileID: 5447564086658427481, guid: 24cab29cfe269e147a2c1bc5ac2d834e, type: 3}
       propertyPath: attackerPosition.x
       value: -0.06
       objectReference: {fileID: 0}

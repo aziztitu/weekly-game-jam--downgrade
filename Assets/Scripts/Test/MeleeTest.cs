@@ -67,23 +67,28 @@ public class MeleeTest : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isShielding)
-            {
-                float enemyAttackAngle = Vector3.Angle(transform.forward, attackerPosition);
+            TryShield();
+        }
+    }
 
-                if(enemyAttackAngle > shieldingAngle)
-                {
-                    Debug.Log("Shielded");
-                }
-                else
-                {
-                    Debug.Log("Not Shielded");
-                }
+    void TryShield()
+    {
+        if (isShielding)
+        {
+            float enemyAttackAngle = Vector3.Angle(new Vector3(transform.forward.x, 0.0f, transform.forward.z), new Vector3(attackerPosition.x, 0.0f, attackerPosition.z));
+
+            if (enemyAttackAngle < shieldingAngle)
+            {
+                Debug.Log("Shielded");
             }
             else
             {
                 Debug.Log("Not Shielded");
             }
+        }
+        else
+        {
+            Debug.Log("Not Shielded");
         }
     }
 
