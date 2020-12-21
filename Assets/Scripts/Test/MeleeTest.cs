@@ -91,7 +91,6 @@ public class MeleeTest : MonoBehaviour
             Debug.Log("Not Shielded");
         }
     }
-}
 
     void DisableWeaponCollider()
     {
