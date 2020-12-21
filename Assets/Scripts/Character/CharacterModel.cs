@@ -8,6 +8,10 @@ public class CharacterModel : MonoBehaviour
     public class CharacterInput
     {
         public Vector3 Move;
+        public bool LightAttack;
+        public bool HeavyAttack;
+        public bool IsBlocking;
+        public bool Dodge;
         //        public bool Sprint;
     }
 

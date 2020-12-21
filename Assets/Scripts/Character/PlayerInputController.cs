@@ -20,6 +20,9 @@ public class PlayerInputController : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
 
         _characterModel.characterInput.Move = new Vector3(horizontal, 0f, vertical);
+        _characterModel.characterInput.LightAttack = Input.GetButtonDown("Fire1");
+        _characterModel.characterInput.IsBlocking = Input.GetButton("Fire2");
+        _characterModel.characterInput.Dodge = Input.GetButtonDown("Dodge");
         //_characterModel.characterInput.Sprint = Input.GetButton("Sprint");
     }
 }
