@@ -19,6 +19,8 @@ public class CharacterModel : MonoBehaviour
     public bool isAlive => health.currentHealth > 0;
     public bool isDead => !isAlive;
 
+    public Vector3 lockedOnTargetPos => Vector3.zero;
+
     // public float delayBeforeHealthRegeneration = 3f;
     // public float healthRegenerationSpeed = 1f;
     public Transform playerTarget;
