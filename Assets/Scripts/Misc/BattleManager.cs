@@ -134,6 +134,11 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
                 OnCharacterDied(characterModel.characterIndex);
             });
 
+            if (HUD.Instance.playerStatsList.Count > i)
+            {
+                HUD.Instance.playerStatsList[i].trackingCharacter = characterModel;
+            }
+
             spawnedCharacters.Add(characterModel);
         }
 
