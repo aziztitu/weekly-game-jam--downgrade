@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleManager : SingletonMonoBehaviour<BattleManager>
@@ -126,6 +127,11 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
                 Debug.LogError("Please provide the Downgrade Stages in Battle Manager");
             }
 
+            characterModel.health.OnHealthDepleted.AddListener((() =>
+            {
+                OnCharacterDied(i);
+            }));
+
             spawnedCharacters.Add(characterModel);
         }
 
@@ -134,5 +140,36 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             spawnedCharacters[0].lockedOnTarget = spawnedCharacters[1].transform;
             spawnedCharacters[1].lockedOnTarget = spawnedCharacters[0].transform;
         }
+    }
+
+    void OnCharacterDied(int characterIndex)
+    {
+        var aliveCharacters = spawnedCharacters.Where((model => model.isAlive)).ToList();
+        if (aliveCharacters.Count == 1)
+        {
+            battleData.roundResults.Add(characterIndex);
+            battleData.characterStages[characterIndex]++;
+
+            // TODO: Display "Player Won/Lost the round" Message
+
+            NextRound();
+        } 
+        else if (aliveCharacters.Count == 0)
+        {
+            battleData.roundResults.Add(-1);
+
+            // TODO: Round Tied
+
+            NextRound();
+        }
+    }
+
+    void NextRound()
+    {
+        ScreenFader.Instance.FadeOut(-1, () =>
+        {
+            battleData.currentRound++;
+            GameManager.Instance.RestartCurrentScene();
+        });
     }
 }

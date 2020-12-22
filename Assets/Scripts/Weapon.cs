@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public int weaponId;
+    public float damage = 10;
+
     public Collider weaponCollider { get; private set; }
     private CharacterModel owner;
 

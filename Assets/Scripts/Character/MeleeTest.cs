@@ -145,6 +145,8 @@ public class MeleeTest : MonoBehaviour
 
     void OnWeaponSwitched()
     {
+        anim.SetInteger("CurrentWeaponId", currentWeapon?.weaponId ?? -1);
+
         if (weaponCollider)
         {
             weaponCollider.enabled = false;
