@@ -43,6 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d93b27561a5dbf44876a5922e55856e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downgradeStages:
+  - weaponPrefab: {fileID: 4824267053699612765, guid: ca8f830b7ba6b054fa0a9a984230992e, type: 3}
+    shieldPrefab: {fileID: 310801043524890432, guid: 4d3d05d36a6573e49b7ff392bbcb83ed, type: 3}
   battleSettings:
     characterSelections:
     - character: {fileID: 11400000, guid: dc4662f68db712243bccae8368c34200, type: 2}

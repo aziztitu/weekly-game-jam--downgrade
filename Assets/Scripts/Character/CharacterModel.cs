@@ -25,6 +25,7 @@ public class CharacterModel : MonoBehaviour
     public bool isAlive => health.currentHealth > 0;
     public bool isDead => !isAlive;
 
+    [HideInInspector]
     public Transform lockedOnTarget;
     public Vector3 lockedOnTargetPos => lockedOnTarget?.position ?? Vector3.zero;
 

@@ -1462,10 +1462,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37cc4add41d3ff442a961f26cfeb4e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWeapon: {fileID: 5734426434373382001}
+  weaponHolder: {fileID: 0}
+  shieldHolder: {fileID: 0}
+  currentWeapon: {fileID: 4913424789455171855}
   currentShield: {fileID: 0}
   shieldingAngle: 45
-  attackerPosition: {x: 0, y: 0, z: 0}
+  parryWindow: 0.5
+  attackerPosition: {x: -0.06, y: 1.36, z: 1.29}
+  _btnTryShield: 0
 --- !u!1 &6397696900479585495
 GameObject:
   m_ObjectHideFlags: 0
@@ -2522,11 +2526,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 221271606820277805, guid: db404abd28048104f89a4588e9ae639c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 21.892
+      value: 19.921
+      objectReference: {fileID: 0}
+    - target: {fileID: 221271606820277805, guid: db404abd28048104f89a4588e9ae639c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 16.597
       objectReference: {fileID: 0}
     - target: {fileID: 221271606820277805, guid: db404abd28048104f89a4588e9ae639c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 4.215
+      value: 10.174
       objectReference: {fileID: 0}
     - target: {fileID: 526241954843923090, guid: db404abd28048104f89a4588e9ae639c, type: 3}
       propertyPath: m_IsActive
@@ -2626,7 +2634,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4704244542380759884, guid: db404abd28048104f89a4588e9ae639c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5400922995001738546, guid: db404abd28048104f89a4588e9ae639c, type: 3}
       propertyPath: m_IsActive
@@ -2666,7 +2674,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8456829136419608612, guid: db404abd28048104f89a4588e9ae639c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db404abd28048104f89a4588e9ae639c, type: 3}

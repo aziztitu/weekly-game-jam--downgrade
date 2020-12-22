@@ -106,6 +106,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleManager
       objectReference: {fileID: 0}
+    - target: {fileID: 6567653596066415216, guid: f8794e11467ce534e9dadeb2b6499958, type: 3}
+      propertyPath: characterSpawnPoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6567653596066415216, guid: f8794e11467ce534e9dadeb2b6499958, type: 3}
+      propertyPath: characterSpawnPoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6567653596066415217, guid: f8794e11467ce534e9dadeb2b6499958, type: 3}
       propertyPath: m_RootOrder
       value: 1

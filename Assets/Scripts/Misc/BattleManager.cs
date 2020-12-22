@@ -32,12 +32,24 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
         public void Initialize(int numCharacters)
         {
-            characterStages = new List<int>(numCharacters);
+            characterStages = new List<int>();
+            for (int i = 0; i < numCharacters; i++)
+            {
+                characterStages.Add(0);
+            }
+            
             expired = false;
         }
     }
 
-    [Header("Settings")]
+    [Serializable]
+    public class DowngradeStage
+    {
+        public GameObject weaponPrefab;
+        public GameObject shieldPrefab;
+    }
+
+    [Header("Settings")] public List<DowngradeStage> downgradeStages;
     public BattleSettings battleSettings;
 
     [Header("References")]
@@ -47,6 +59,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     [HideInInspector] public List<CharacterModel> spawnedCharacters = new List<CharacterModel>();
 
     public int numCharacters => Mathf.Min(MaxCharacters, battleSettings.characterSelections.Count);
+    public int totalDowngradeStages => downgradeStages.Count;
+
+    public BattleData battleData => GameManager.Instance.battleData;
 
     new void Awake()
     {
@@ -92,6 +107,23 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             if (characterSelection.isLocalPlayer)
             {
                 ThirdPersonCamera.Instance.SetTargetObject(characterModel.playerTarget);
+            }
+
+            if (downgradeStages.Count > 0)
+            {
+                var downgradeStageIndex = battleData.characterStages[i];
+                if (downgradeStageIndex >= totalDowngradeStages)
+                {
+                    downgradeStageIndex = totalDowngradeStages - 1;
+                }
+
+                var downgradeStage = downgradeStages[downgradeStageIndex];
+                characterModel.characterMeleeController.SpawnWeapon(downgradeStage.weaponPrefab);
+                characterModel.characterMeleeController.SpawnShield(downgradeStage.shieldPrefab);
+            }
+            else
+            {
+                Debug.LogError("Please provide the Downgrade Stages in Battle Manager");
             }
 
             spawnedCharacters.Add(characterModel);

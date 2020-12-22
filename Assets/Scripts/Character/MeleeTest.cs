@@ -9,10 +9,13 @@ public class MeleeTest : MonoBehaviour
     Animator anim => characterModel.animator;
 
     private CharacterModel characterModel;
-    public GameObject currentWeapon;
-    Collider weaponCollider;
+    public Transform weaponHolder;
+    public Transform shieldHolder;
 
-    public GameObject currentShield;
+    public Weapon currentWeapon { get; private set; }
+    Collider weaponCollider => currentWeapon?.weaponCollider;
+
+    public GameObject currentShield { get; private set; }
     public float shieldingAngle = 0;
     public float parryWindow = 0.5f;
 
@@ -44,7 +47,7 @@ public class MeleeTest : MonoBehaviour
         characterModel.characterAnimEventHandler.onMeleeAttackSequenceEnded +=
             () => { this.isAttackSequenceActive = false; };
 
-        characterModel.characterAnimEventHandler.onMeleeAttackStarted += (int comboIndex, float damage) =>
+        characterModel.characterAnimEventHandler.onMeleeAttackStarted += (int comboIndex, float damageMultiplier) =>
         {
             UpdateWeaponCollider(true);
         };
@@ -110,16 +113,41 @@ public class MeleeTest : MonoBehaviour
         anim.SetTrigger("parry");
     }
 
-    void OnWeaponSwitched()
+    public void SpawnWeapon(GameObject weaponPrefab)
     {
         if (currentWeapon)
         {
-            weaponCollider = currentWeapon.GetComponent<Collider>();
-            weaponCollider.enabled = false;
+            Destroy(currentWeapon);
+            currentWeapon = null;
         }
-        else
+
+        if (weaponPrefab)
         {
-            weaponCollider = null;
+            currentWeapon = Instantiate(weaponPrefab, weaponHolder).GetComponent<Weapon>();
+        }
+
+        OnWeaponSwitched();
+    }
+
+    public void SpawnShield(GameObject shieldPrefab)
+    {
+        if (currentShield)
+        {
+            Destroy(currentShield);
+            currentShield = null;
+        }
+
+        if (shieldPrefab)
+        {
+            currentShield = Instantiate(shieldPrefab, shieldHolder);
+        }
+    }
+
+    void OnWeaponSwitched()
+    {
+        if (weaponCollider)
+        {
+            weaponCollider.enabled = false;
         }
     }
 
