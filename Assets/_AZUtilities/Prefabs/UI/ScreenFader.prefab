@@ -12,8 +12,7 @@ GameObject:
   - component: {fileID: 6581567186481102745}
   - component: {fileID: 6315210340170717994}
   - component: {fileID: 5665236003805575348}
-  - component: {fileID: 8932186086853765634}
-  - component: {fileID: 5223029962324119564}
+  - component: {fileID: 1019065035851523798}
   m_Layer: 5
   m_Name: ScreenFader
   m_TagString: Untagged
@@ -84,6 +83,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &5665236003805575348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8932186086853765634
+--- !u!114 &1019065035851523798
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,37 +110,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 799965185536649829}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b19426fc90184e2408576d5b34561e5e, type: 3}
+  m_Script: {fileID: 11500000, guid: 94aaae56c1b574242a4dab2206598378, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 7231796794414541294}
-  fadeDuration: 2
+  fadeImage: {fileID: 7231796794414541294}
   fadeInOnAwake: 1
-  onFadeIn:
-    m_PersistentCalls:
-      m_Calls: []
-  onFadeOut:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!95 &5223029962324119564
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 799965185536649829}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f3eba1ab77350ae4699aeb3c089f87c9, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 2
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  defaultFadeDuration: 3
 --- !u!1 &2696647319642812209
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,10 +176,12 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 58e923fe6f4cb2d4d9e76f39c2d5a44a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a0803a9559d9d1a4f91a0d48cb44c236, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

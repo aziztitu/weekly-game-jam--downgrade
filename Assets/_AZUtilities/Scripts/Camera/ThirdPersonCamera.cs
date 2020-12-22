@@ -59,6 +59,12 @@ public class ThirdPersonCamera : SingletonMonoBehaviour<ThirdPersonCamera>
         }*/
     }
 
+    public void SetTargetObject(Transform target)
+    {
+        targetObject = target;
+        cameraFollow.SetFollow(targetObject);
+    }
+
     /*void RefreshFromSettings()
     {
         var gameManager = GameManager.Get();

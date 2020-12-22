@@ -1,0 +1,106 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BattleManager : SingletonMonoBehaviour<BattleManager>
+{
+    const int MaxCharacters = 2;
+
+    [Serializable]
+    public class BattleSettings
+    {
+        public List<CharacterSelection> characterSelections;
+    }
+
+    [Serializable]
+    public class CharacterSelection
+    {
+        public CharacterData character;
+        public bool isLocalPlayer;
+    }
+
+    [Serializable]
+    public class BattleData
+    {
+        public bool expired = true;
+
+        public int currentRound = 0;
+        public List<int> roundResults = new List<int>();
+
+        public List<int> characterStages;
+
+        public void Initialize(int numCharacters)
+        {
+            characterStages = new List<int>(numCharacters);
+            expired = false;
+        }
+    }
+
+    [Header("Settings")]
+    public BattleSettings battleSettings;
+
+    [Header("References")]
+    public List<Transform> characterSpawnPoints;
+    private Randomizer<Transform> characterSpawnRandomizer;
+
+    [HideInInspector] public List<CharacterModel> spawnedCharacters = new List<CharacterModel>();
+
+    public int numCharacters => Mathf.Min(MaxCharacters, battleSettings.characterSelections.Count);
+
+    new void Awake()
+    {
+        base.Awake();
+
+        if (GameManager.Instance.hasBattleSettings)
+        {
+            this.battleSettings = GameManager.Instance.SelectedBattleSettings;
+        }
+
+        characterSpawnRandomizer = new Randomizer<Transform>(characterSpawnPoints);
+
+        if (GameManager.Instance.battleData.expired)
+        {
+            GameManager.Instance.battleData = new BattleData();
+            GameManager.Instance.battleData.Initialize(numCharacters);
+        }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        SpawnCharacters();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
+
+    void SpawnCharacters()
+    {
+        for (int i = 0; i < numCharacters; i++)
+        {
+            var characterSelection = battleSettings.characterSelections[i];
+
+            var spawnPoint = characterSpawnRandomizer.GetRandomItem();
+            var characterModel = Instantiate(characterSelection.character.prefab, spawnPoint.position, spawnPoint.rotation)
+                .GetComponent<CharacterModel>();
+
+            characterModel.GetComponent<PlayerInputController>().enabled = characterSelection.isLocalPlayer;
+
+            if (characterSelection.isLocalPlayer)
+            {
+                ThirdPersonCamera.Instance.SetTargetObject(characterModel.playerTarget);
+            }
+
+            spawnedCharacters.Add(characterModel);
+        }
+
+        if (spawnedCharacters.Count == 2)
+        {
+            spawnedCharacters[0].lockedOnTarget = spawnedCharacters[1].transform;
+            spawnedCharacters[1].lockedOnTarget = spawnedCharacters[0].transform;
+        }
+    }
+}
