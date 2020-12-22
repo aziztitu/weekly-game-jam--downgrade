@@ -38,6 +38,7 @@ public class CharacterModel : MonoBehaviour
     // public float delayBeforeHealthRegeneration = 3f;
     // public float healthRegenerationSpeed = 1f;
     public Transform playerTarget;
+    public Transform avatar;
     public float deathAnimationDuration = 3f;
     public float playerHitCamShakeDuration = 1f;
     public float playerHitCamShakeMinInterval = 1f;

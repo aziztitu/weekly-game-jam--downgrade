@@ -11,6 +11,11 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private bool m_IsWalking;
     [SerializeField] private float m_WalkSpeed;
     [SerializeField] private float m_RunSpeed;
+    [SerializeField] private float m_DodgeSpeed;
+    public float dodgeDuration = 1;
+    public float dodgeYOffset = -1;
+    public float dodgeYLerpFactor = 5;
+
     [SerializeField] private float m_HitSpeedFactor;
     [SerializeField] private float m_HitSpeedDuration;
     [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
@@ -41,6 +46,12 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] [ReadOnly] private float chargedJumpCharge = 0;
     private float airTime = 0;
 
+    [ReadOnly] public bool isDodging = false;
+    private float timeSinceDodgeStart = 0;
+    private Vector3 dodgeDir;
+
+    private Vector3 originalAvatarPosition;
+
     private class GizmosData
     {
         public Vector3 raycastDir;
@@ -61,6 +72,9 @@ public class CharacterMovementController : MonoBehaviour
         m_NextStep = m_StepCycle / 2f;
         m_Jumping = false;
         m_AudioSource = GetComponent<AudioSource>();
+
+        originalAvatarPosition = characterModel.avatar.localPosition;
+        timeSinceDodgeStart = dodgeDuration * 2;
     }
 
     public void OnDrawGizmos()
@@ -101,6 +115,26 @@ public class CharacterMovementController : MonoBehaviour
             m_MoveDir.y = 0f;
         }
 
+        if (!isDodging && characterModel.characterInput.Dodge && m_CharacterController.isGrounded &&
+            timeSinceDodgeStart > dodgeDuration * 2)
+        {
+            isDodging = true;
+            var moveDir = characterModel.characterInput.Move;
+            dodgeDir = moveDir.magnitude > 0.1
+                ? ThirdPersonCamera.Instance.virtualCamera.transform.TransformDirection(moveDir)
+                : transform.forward;
+
+            dodgeDir.y = 0;
+            dodgeDir.Normalize();
+
+            timeSinceDodgeStart = 0;
+
+            var localDodgeDir = transform.InverseTransformDirection(dodgeDir);
+            characterModel.animator.SetFloat("DodgeX", localDodgeDir.x);
+            characterModel.animator.SetFloat("DodgeY", localDodgeDir.z);
+            characterModel.animator.SetTrigger("Dodge");
+        }
+
         m_PreviouslyGrounded = m_CharacterController.isGrounded;
     }
 
@@ -112,24 +146,49 @@ public class CharacterMovementController : MonoBehaviour
             return;
         }
 
-        float speed;
-        GetInput(out speed);
+        timeSinceDodgeStart += Time.fixedDeltaTime;
 
-        Move(speed);
+        var dodgeAvatarPosition = originalAvatarPosition;
+        dodgeAvatarPosition.y += dodgeYOffset;
 
-        if (m_CharacterController.isGrounded)
+        float avatarPositionLerpValue = 0;
+        if (isDodging)
         {
-            airTime = 0;
+            PerformDodge();
+            avatarPositionLerpValue = HelperUtilities.Remap(timeSinceDodgeStart, 0, dodgeDuration / 2, 0, 1);
+
+            if (timeSinceDodgeStart >= dodgeDuration)
+            {
+                isDodging = false;
+            }
         }
         else
         {
-            airTime += Time.fixedDeltaTime;
+            float speed;
+            GetInput(out speed);
+
+            Move(speed);
+
+            if (m_CharacterController.isGrounded)
+            {
+                airTime = 0;
+            }
+            else
+            {
+                airTime += Time.fixedDeltaTime;
+            }
+
+            ProgressStepCycle(speed);
+
+            avatarPositionLerpValue = HelperUtilities.Remap(timeSinceDodgeStart, dodgeDuration,
+                dodgeDuration + (dodgeDuration / 2), 1, 0);
         }
 
-        ProgressStepCycle(speed);
+        characterModel.avatar.localPosition = Vector3.Lerp(originalAvatarPosition, dodgeAvatarPosition,
+            avatarPositionLerpValue);
     }
 
-    private void Move(float speed)
+    private void adjustCurSpeed(float speed)
     {
         if (speed > curSpeed)
         {
@@ -141,7 +200,20 @@ public class CharacterMovementController : MonoBehaviour
             curSpeed -= deceleration;
             curSpeed = Mathf.Max(curSpeed, speed);
         }
+    }
 
+    private void PerformDodge()
+    {
+        adjustCurSpeed(m_DodgeSpeed);
+        m_CollisionFlags = m_CharacterController.Move(dodgeDir * curSpeed * Time.fixedDeltaTime);
+
+        var targetRot = Quaternion.LookRotation(dodgeDir);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * 2 * Time.fixedDeltaTime);
+    }
+
+    private void Move(float speed)
+    {
+        adjustCurSpeed(speed);
         switch (CinemachineCameraManager.Instance.CurrentState)
         {
             case CinemachineCameraManager.CinemachineCameraState.ThirdPerson:
@@ -224,7 +296,7 @@ public class CharacterMovementController : MonoBehaviour
             desiredMove.Normalize();
         }
 
-        if (desiredMove.magnitude > 0)
+        if (desiredMove.magnitude > 0 || characterModel.characterMeleeController.attemptingToShield)
         {
             //            Vector3 lookAtTarget = transform.position +
             //                                   (thirdPersonCamera.virtualCamera.transform.forward * 5);

@@ -166,6 +166,7 @@ MonoBehaviour:
   characterIndex: 0
   lockedOnTarget: {fileID: 0}
   playerTarget: {fileID: 4468325815373265918}
+  avatar: {fileID: 4468325816772310912}
   deathAnimationDuration: 3
   playerHitCamShakeDuration: 1
   playerHitCamShakeMinInterval: 1
@@ -189,6 +190,10 @@ MonoBehaviour:
   m_IsWalking: 0
   m_WalkSpeed: 5
   m_RunSpeed: 8
+  m_DodgeSpeed: 10
+  dodgeDuration: 0.6
+  dodgeYOffset: -0.4
+  dodgeYLerpFactor: 5
   m_HitSpeedFactor: 0
   m_HitSpeedDuration: 0
   m_RunstepLenghten: 0
@@ -199,6 +204,7 @@ MonoBehaviour:
   m_JumpSound: {fileID: 0}
   m_LandSound: {fileID: 0}
   chargedJumpCharge: 0
+  isDodging: 0
 --- !u!114 &3239025343097112978
 MonoBehaviour:
   m_ObjectHideFlags: 0
