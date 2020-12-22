@@ -54,6 +54,8 @@ public class CharacterAnimEventHandler : MonoBehaviour
         Debug.Log("Melee Attack Sequence Ended");
         checkingComboContinue = false;
         onMeleeAttackSequenceEnded?.Invoke();
+
+        animator.ResetTrigger("Attack");
     }
 
     public void MeleeAttackStart(AnimationEvent animationEvent)
@@ -71,6 +73,7 @@ public class CharacterAnimEventHandler : MonoBehaviour
     public void ComboContinueCheckStart()
     {
         checkingComboContinue = true;
+        animator.ResetTrigger("ContinueCombo");
         onComboContinueCheckStarted?.Invoke();
     }
 

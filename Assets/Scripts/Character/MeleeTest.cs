@@ -34,6 +34,8 @@ public class MeleeTest : MonoBehaviour
     public bool isAttackSequenceActive { get; private set; } = false;
     public float curDamageMultiplier { get; private set; } = 1;
 
+    public bool comboContinued { get; private set; } = false;
+
     private void Awake()
     {
         characterModel = GetComponent<CharacterModel>();
@@ -45,7 +47,11 @@ public class MeleeTest : MonoBehaviour
         OnWeaponSwitched();
 
         characterModel.characterAnimEventHandler.onMeleeAttackSequenceStarted +=
-            () => { this.isAttackSequenceActive = true; };
+            () =>
+            {
+                this.isAttackSequenceActive = true;
+                anim.ResetTrigger("CancelCombo");
+            };
         characterModel.characterAnimEventHandler.onMeleeAttackSequenceEnded +=
             () =>
             {
@@ -59,6 +65,14 @@ public class MeleeTest : MonoBehaviour
             curDamageMultiplier = damageMultiplier;
         };
         characterModel.characterAnimEventHandler.onMeleeAttackEnded += () => { UpdateWeaponCollider(false); };
+        characterModel.characterAnimEventHandler.onComboContinueCheckStarted += () => { comboContinued = false; };
+        characterModel.characterAnimEventHandler.onComboContinueCheckEnded += () =>
+        {
+            if (!comboContinued)
+            {
+                anim.SetTrigger("CancelCombo");
+            }
+        };
     }
 
     void OnDrawGizmos()
@@ -81,6 +95,7 @@ public class MeleeTest : MonoBehaviour
             {
                 if (characterModel.characterAnimEventHandler.checkingComboContinue)
                 {
+                    comboContinued = true;
                     anim.SetTrigger("ContinueCombo");
                 }
             }
