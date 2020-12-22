@@ -24,13 +24,15 @@ public class MeleeTest : MonoBehaviour
     [Button("Try Shield", "TryShield")] [SerializeField]
     private bool _btnTryShield;
 
-    public bool isShielding => !isAttackSequenceActive && characterModel.characterInput.IsBlocking;
-    private bool wasShielding = false;
+    public bool attemptingToShield => !isAttackSequenceActive && characterModel.characterInput.IsBlocking;
+    private bool wasAttemptingToShield = false;
+    public bool isShielding => currentShield && attemptingToShield;
     private float lastShieldStartTime = 0;
     public float timeSinceLastShieldStartTime => Time.time - lastShieldStartTime;
     public bool isInParryWindow => timeSinceLastShieldStartTime < parryWindow;
 
     public bool isAttackSequenceActive { get; private set; } = false;
+    public float curDamageMultiplier { get; private set; } = 1;
 
     private void Awake()
     {
@@ -45,11 +47,16 @@ public class MeleeTest : MonoBehaviour
         characterModel.characterAnimEventHandler.onMeleeAttackSequenceStarted +=
             () => { this.isAttackSequenceActive = true; };
         characterModel.characterAnimEventHandler.onMeleeAttackSequenceEnded +=
-            () => { this.isAttackSequenceActive = false; };
+            () =>
+            {
+                this.isAttackSequenceActive = false;
+                UpdateWeaponCollider(false);
+            };
 
         characterModel.characterAnimEventHandler.onMeleeAttackStarted += (int comboIndex, float damageMultiplier) =>
         {
             UpdateWeaponCollider(true);
+            curDamageMultiplier = damageMultiplier;
         };
         characterModel.characterAnimEventHandler.onMeleeAttackEnded += () => { UpdateWeaponCollider(false); };
     }
@@ -63,6 +70,11 @@ public class MeleeTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (characterModel.isDead)
+        {
+            return;
+        }
+
         if (characterModel.characterInput.LightAttack)
         {
             if (isAttackSequenceActive)
@@ -78,13 +90,21 @@ public class MeleeTest : MonoBehaviour
             }
         }
 
-        if (isShielding && !wasShielding)
+        if (attemptingToShield && !wasAttemptingToShield)
         {
             lastShieldStartTime = Time.time;
         }
 
-        anim.SetBool("IsShielding", isShielding);
-        wasShielding = isShielding;
+        if (currentShield)
+        {
+            anim.SetBool("IsShielding", isShielding);
+        }
+        else if (attemptingToShield && !wasAttemptingToShield)
+        {
+            anim.SetTrigger("ShieldAttempt");
+        }
+
+        wasAttemptingToShield = attemptingToShield;
 
         /*if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -108,9 +128,15 @@ public class MeleeTest : MonoBehaviour
     {
     }
 
-    public void Parry()
+    public void Parry(CharacterModel attacker)
     {
-        anim.SetTrigger("parry");
+        anim.SetTrigger("Parry");
+        attacker.characterMeleeController.OnParried();
+    }
+
+    public void OnParried()
+    {
+        anim.SetTrigger("ParryStunned");
     }
 
     public void SpawnWeapon(GameObject weaponPrefab)
@@ -181,5 +207,25 @@ public class MeleeTest : MonoBehaviour
         {
             weaponCollider.enabled = enable;
         }
+    }
+
+    public bool OnIncomingAttack(CharacterModel attacker, float damage, out bool parried)
+    {
+        if (attemptingToShield && isInParryWindow)
+        {
+            parried = true;
+            Parry(attacker);
+            return false;
+        }
+
+        parried = false;
+        if (isShielding && CanBlock(attacker.transform.position))
+        {
+            return false;
+        }
+
+        characterModel.health.TakeDamage(damage);
+
+        return true;
     }
 }

@@ -104,6 +104,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
                 .GetComponent<CharacterModel>();
 
             characterModel.GetComponent<PlayerInputController>().enabled = characterSelection.isLocalPlayer;
+            characterModel.characterSelectionData = characterSelection;
+            characterModel.characterIndex = i;
 
             if (characterSelection.isLocalPlayer)
             {
@@ -126,11 +128,11 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             {
                 Debug.LogError("Please provide the Downgrade Stages in Battle Manager");
             }
-
-            characterModel.health.OnHealthDepleted.AddListener((() =>
+            
+            characterModel.health.OnHealthDepleted.AddListener(() =>
             {
-                OnCharacterDied(i);
-            }));
+                OnCharacterDied(characterModel.characterIndex);
+            });
 
             spawnedCharacters.Add(characterModel);
         }
@@ -144,11 +146,13 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     void OnCharacterDied(int characterIndex)
     {
+        Debug.Log(characterIndex);
         var aliveCharacters = spawnedCharacters.Where((model => model.isAlive)).ToList();
         if (aliveCharacters.Count == 1)
         {
-            battleData.roundResults.Add(characterIndex);
-            battleData.characterStages[characterIndex]++;
+            var winner = aliveCharacters[0];
+            battleData.roundResults.Add(winner.characterIndex);
+            battleData.characterStages[winner.characterIndex]++;
 
             // TODO: Display "Player Won/Lost the round" Message
 
@@ -166,10 +170,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     void NextRound()
     {
-        ScreenFader.Instance.FadeOut(-1, () =>
+        GameManager.Instance.RestartCurrentScene(() =>
         {
             battleData.currentRound++;
-            GameManager.Instance.RestartCurrentScene();
         });
     }
 }

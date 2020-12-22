@@ -160,6 +160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d0b36f5cdb362d4cb51a2b0f17c6262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterSelectionData:
+    character: {fileID: 0}
+    isLocalPlayer: 0
+  characterIndex: 0
   lockedOnTarget: {fileID: 0}
   playerTarget: {fileID: 4468325815373265918}
   deathAnimationDuration: 3
@@ -237,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5745610f13473a544892b56a6b95afa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 30
   currentHealth: 0
   startWithMaxHealth: 1
   OnDamageTaken:
@@ -514,7 +518,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5004999587801565457}
   m_LocalRotation: {x: 0.0392096, y: 0.000000085448825, z: 0.00000012882444, w: 0.99923104}
-  m_LocalPosition: {x: -0.004, y: 0.041, z: 0.004}
+  m_LocalPosition: {x: 0.077, y: 0.067, z: -0.043}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4171332766912770398}

@@ -11,13 +11,15 @@ public class CharacterModel : MonoBehaviour
         public bool LightAttack;
         public bool HeavyAttack;
         public bool IsBlocking;
+
         public bool Dodge;
         //        public bool Sprint;
     }
 
     public CharacterInput characterInput = new CharacterInput();
-    
+
     public CharacterMovementController characterMovementController { get; private set; }
+    public PlayerInputController playerInputController { get; private set; }
     public MeleeTest characterMeleeController { get; private set; }
     public CharacterAnimEventHandler characterAnimEventHandler { get; private set; }
     public Animator animator { get; private set; }
@@ -25,8 +27,12 @@ public class CharacterModel : MonoBehaviour
     public bool isAlive => health.currentHealth > 0;
     public bool isDead => !isAlive;
 
-    [HideInInspector]
-    public Transform lockedOnTarget;
+    [HideInInspector] public BattleManager.CharacterSelection characterSelectionData = null;
+    [ReadOnly] public int characterIndex = 0;
+
+    public bool isLocalPlayer => characterSelectionData?.isLocalPlayer ?? false;
+
+    [HideInInspector] public Transform lockedOnTarget;
     public Vector3 lockedOnTargetPos => lockedOnTarget?.position ?? Vector3.zero;
 
     // public float delayBeforeHealthRegeneration = 3f;
@@ -43,6 +49,7 @@ public class CharacterModel : MonoBehaviour
     void Awake()
     {
         characterMovementController = GetComponent<CharacterMovementController>();
+        playerInputController = GetComponent<PlayerInputController>();
         characterMeleeController = GetComponent<MeleeTest>();
         animator = GetComponentInChildren<Animator>(false);
         characterAnimEventHandler = animator.GetComponent<CharacterAnimEventHandler>();
@@ -53,7 +60,7 @@ public class CharacterModel : MonoBehaviour
             {
                 animator.SetTrigger("Hit");
 
-                if (!isShakingCam)
+                if (isLocalPlayer && !isShakingCam)
                 {
                     CinemachineCameraManager.Instance.CurrentStatefulCinemachineCamera.CamNoise(
                         playerHitCamShakeAmplitude, playerHitCamShakeFrequency);
@@ -61,10 +68,7 @@ public class CharacterModel : MonoBehaviour
                     this.WaitAndExecute(() =>
                     {
                         CinemachineCameraManager.Instance.CurrentStatefulCinemachineCamera.CamNoise(0, 0);
-                        this.WaitAndExecute(() =>
-                        {
-                            isShakingCam = false;
-                        }, playerHitCamShakeMinInterval);
+                        this.WaitAndExecute(() => { isShakingCam = false; }, playerHitCamShakeMinInterval);
                     }, playerHitCamShakeDuration);
                 }
             }
@@ -72,7 +76,8 @@ public class CharacterModel : MonoBehaviour
         health.OnHealthDepleted.AddListener(() =>
         {
             animator.applyRootMotion = true;
-            animator.SetTrigger("Death");
+            var deathMode = (Random.Range(0, 10) >= 5) ? 1 : 2;
+            animator.SetTrigger($"Death{deathMode}");
         });
     }
 

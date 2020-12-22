@@ -23,7 +23,8 @@ public class Weapon : MonoBehaviour
             CharacterModel otherCharacterModel = other.GetComponent<CharacterModel>();
             if (otherCharacterModel != owner)
             {
-                Debug.Log("OnAttack Function Called"); // TODO (Gavin): Add OnAttack function
+                otherCharacterModel.characterMeleeController.OnIncomingAttack(owner,
+                    damage * owner.characterMeleeController.curDamageMultiplier, out var _);
                 weaponCollider.enabled = false;
             }
         }

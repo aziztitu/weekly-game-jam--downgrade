@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        transform.SetParent(null);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -108,15 +109,16 @@ public class GameManager : MonoBehaviour
         GoToScene(characterSelectionScene);
     }
 
-    public void RestartCurrentScene()
+    public void RestartCurrentScene(Action postFadeCallback = null)
     {
-        GoToScene(SceneManager.GetActiveScene().name);
+        GoToScene(SceneManager.GetActiveScene().name, postFadeCallback);
     }
 
-    public void GoToScene(string sceneName)
+    public void GoToScene(string sceneName, Action postFadeCallback = null)
     {
         ScreenFader.Instance.FadeOut(-1, () =>
         {
+            postFadeCallback?.Invoke();
             SceneManager.LoadScene(sceneName);
         });
     }
