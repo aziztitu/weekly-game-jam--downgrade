@@ -168,16 +168,24 @@ public class AIController : MonoBehaviour
         {
             var attackDefendProbability = 0.5f;
 
+            // TODO: Modify Attack/Defend Probability more strategically
+
             if (Random.Range(0f, 1f) < attackDefendProbability)
             {
                 // Attack
                 newInput.LightAttack = true;
+
+                // TODO: Choose Light/Heavy strategically
             }
             else
             {
                 // Defend
                 newInput.IsBlocking = true;
                 blockTimer.Reset();
+
+                // TODO: Choose Shield/Dodge strategically
+
+                // TODO: Random Dodges
             }
 
             combatActionTimer.Reset();
