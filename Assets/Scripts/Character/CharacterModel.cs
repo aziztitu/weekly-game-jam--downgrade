@@ -39,6 +39,23 @@ public class CharacterModel : MonoBehaviour
     // public float healthRegenerationSpeed = 1f;
     public Transform playerTarget;
     public Transform avatar;
+    public Transform avatarModel
+    {
+        get
+        {
+            for (int i = 0; i < avatar.childCount; i++)
+            {
+                var child = avatar.GetChild(i);
+                if (child.gameObject.activeInHierarchy)
+                {
+                    return child;
+                }
+            }
+
+            return null;
+        }
+    }
+
     public float deathAnimationDuration = 3f;
     public float playerHitCamShakeDuration = 1f;
     public float playerHitCamShakeMinInterval = 1f;

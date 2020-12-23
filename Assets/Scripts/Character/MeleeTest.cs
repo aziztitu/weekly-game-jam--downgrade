@@ -86,11 +86,14 @@ public class MeleeTest : MonoBehaviour
     {
         if (characterModel.isDead)
         {
+            anim.SetBool("IsAttacking", false);
             return;
         }
 
-        if (characterModel.characterInput.LightAttack)
+        if (characterModel.characterInput.LightAttack || characterModel.characterInput.HeavyAttack)
         {
+            anim.SetInteger("AttackMode", characterModel.characterInput.LightAttack ? 0 : 1);
+
             if (isAttackSequenceActive)
             {
                 if (characterModel.characterAnimEventHandler.checkingComboContinue)
@@ -120,6 +123,8 @@ public class MeleeTest : MonoBehaviour
         }
 
         wasAttemptingToShield = attemptingToShield;
+
+        anim.SetBool("IsAttacking", isAttackSequenceActive);
 
         /*if (Input.GetKeyDown(KeyCode.Q))
         {

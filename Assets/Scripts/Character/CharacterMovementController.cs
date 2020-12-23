@@ -115,6 +115,13 @@ public class CharacterMovementController : MonoBehaviour
             m_MoveDir.y = 0f;
         }
 
+        m_PreviouslyGrounded = m_CharacterController.isGrounded;
+
+        if (characterModel.characterMeleeController.isAttackSequenceActive)
+        {
+            return;
+        }
+
         if (!isDodging && characterModel.characterInput.Dodge && m_CharacterController.isGrounded &&
             timeSinceDodgeStart > dodgeDuration * 2)
         {
@@ -134,12 +141,12 @@ public class CharacterMovementController : MonoBehaviour
             characterModel.animator.SetFloat("DodgeY", localDodgeDir.z);
             characterModel.animator.SetTrigger("Dodge");
         }
-
-        m_PreviouslyGrounded = m_CharacterController.isGrounded;
     }
 
     private void FixedUpdate()
     {
+        ApplyGravity();
+
         if (characterModel.isDead)
         {
             UpdateMoveAnimation(0, 0, true, false);
@@ -164,21 +171,28 @@ public class CharacterMovementController : MonoBehaviour
         }
         else
         {
-            float speed;
-            GetInput(out speed);
-
-            Move(speed);
-
-            if (m_CharacterController.isGrounded)
+            if (!characterModel.characterMeleeController.isAttackSequenceActive)
             {
-                airTime = 0;
+                float speed;
+                GetInput(out speed);
+
+                Move(speed);
+
+                if (m_CharacterController.isGrounded)
+                {
+                    airTime = 0;
+                }
+                else
+                {
+                    airTime += Time.fixedDeltaTime;
+                }
+
+                ProgressStepCycle(speed);
             }
             else
             {
-                airTime += Time.fixedDeltaTime;
+                Move(0);
             }
-
-            ProgressStepCycle(speed);
 
             avatarPositionLerpValue = HelperUtilities.Remap(timeSinceDodgeStart, dodgeDuration,
                 dodgeDuration + (dodgeDuration / 2), 1, 0);
@@ -202,10 +216,27 @@ public class CharacterMovementController : MonoBehaviour
         }
     }
 
+    void ApplyGravity()
+    {
+        if (!m_Jumping && m_CharacterController.isGrounded)
+        {
+            m_MoveDir.y = -m_StickToGroundForce;
+        }
+        else
+        {
+            //            Debug.Log("Applying Gravity");
+            m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+        }
+
+        m_CollisionFlags = m_CharacterController.Move(m_MoveDir * Time.fixedDeltaTime);
+    }
+
     private void PerformDodge()
     {
         adjustCurSpeed(m_DodgeSpeed);
         m_CollisionFlags = m_CharacterController.Move(dodgeDir * curSpeed * Time.fixedDeltaTime);
+
+        // ApplyGravity();
 
         var targetRot = Quaternion.LookRotation(dodgeDir);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * 2 * Time.fixedDeltaTime);
@@ -223,17 +254,7 @@ public class CharacterMovementController : MonoBehaviour
                 return;
         }
 
-        if (!m_Jumping && m_CharacterController.isGrounded)
-        {
-            m_MoveDir.y = -m_StickToGroundForce;
-        }
-        else
-        {
-            //            Debug.Log("Applying Gravity");
-            m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
-        }
-
-        m_CollisionFlags = m_CharacterController.Move(m_MoveDir * Time.fixedDeltaTime);
+        // ApplyGravity();
 
         // Move Animation
 

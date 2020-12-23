@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class MeleeAttackSequenceState : StateMachineBehaviour
@@ -7,18 +8,43 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
     public bool isEntry = false;
     public bool isExit = false;
 
-    public float avatarYRotationOffset = 0;
+    public bool applyRootMotion = false;
+
+    [Header("Avatar Position Offset")] public Vector3 avatarPositionOffset;
+    public float positionTweenDuration;
+    public bool translateAvatarOnEnter = false;
+    public bool translateAvatarOnExit = false;
+
+    [Header("Avatar Rotation Offset")] public Vector3 avatarRotationOffset;
+    public float rotationTweenDuration;
+    public bool rotateAvatarOnEnter = false;
+    public bool rotateAvatarOnExit = false;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        var charModel = animator.GetComponentInParent<CharacterModel>();
         if (isEntry)
         {
-            var charModel = animator.GetComponentInParent<CharacterModel>();
             charModel.characterAnimEventHandler.MeleeAttackSequenceStart();
         }
+        
+        if (translateAvatarOnEnter)
+        {
+            charModel.avatarModel
+                .DOLocalMove(avatarPositionOffset, positionTweenDuration).Play();
+        }
 
-//        animator.applyRootMotion = true;
+        if (rotateAvatarOnEnter)
+        {
+            charModel.avatarModel
+                .DOLocalRotateQuaternion(Quaternion.Euler(avatarRotationOffset), rotationTweenDuration).Play();
+        }
+
+        if (applyRootMotion)
+        {
+            animator.applyRootMotion = true;
+        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -30,15 +56,32 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        var charModel = animator.GetComponentInParent<CharacterModel>();
+
+        if (applyRootMotion)
+        {
+            animator.applyRootMotion = false;
+        }
+        
+        if (translateAvatarOnExit || applyRootMotion)
+        {
+            charModel.avatarModel
+                .DOLocalMove(Vector3.zero, positionTweenDuration).Play();
+        }
+
+        if (rotateAvatarOnExit || applyRootMotion)
+        {
+            charModel.avatarModel.DOLocalRotateQuaternion(Quaternion.identity, rotationTweenDuration).Play();
+        }
+
         if (isExit)
         {
-            var charModel = animator.GetComponentInParent<CharacterModel>();
             if (charModel.characterMeleeController.isAttackSequenceActive)
             {
                 charModel.characterAnimEventHandler.MeleeAttackEnd();
             }
+
             charModel.characterAnimEventHandler.MeleeAttackSequenceEnd();
-            animator.applyRootMotion = false;
         }
     }
 
