@@ -56,6 +56,8 @@ public class CharacterMovementController : MonoBehaviour
     private float dashSpeed;
     private float dashDuration = 1;
 
+    public float shieldTurnWindow = 1f;
+
     private Vector3 originalAvatarPosition;
 
     private Transform frameOfReference =>
@@ -366,7 +368,9 @@ public class CharacterMovementController : MonoBehaviour
             desiredMove.Normalize();
         }
 
-        if (desiredMove.magnitude > 0 || characterModel.characterMeleeController.attemptingToShield)
+        if (desiredMove.magnitude > 0 || (characterModel.characterMeleeController.attemptingToShield &&
+                                          characterModel.characterMeleeController.shieldTimer.elapsedTime <
+                                          shieldTurnWindow))
         {
             TurnTowardsLockedTarget();
         }

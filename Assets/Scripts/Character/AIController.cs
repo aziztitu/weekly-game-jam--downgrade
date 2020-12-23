@@ -27,15 +27,60 @@ public class AIController : MonoBehaviour
         public float activeAggChangeThreshold => activeAggChangeThresholdRange.selected;
     }
 
+    [Serializable]
+    public class CombatModifier
+    {
+        public float probability;
+        public RangeFloat delta;
+
+        public CombatModifier(float prob, RangeFloat delta)
+        {
+            probability = prob;
+            this.delta = delta;
+        }
+
+        public float ProcessDelta()
+        {
+            return HelperUtilities.TestProbability(probability) ? delta.GetRandom() : 0;
+        }
+    }
+
     [Header("Stats")] public AiStats stats;
     public RangeFloat combatRadiusRange = new RangeFloat(5, 8);
     [Range(0, 1)] public float dodgeOutsideCombatProbability = 0.2f;
     public SimpleTimer dodgeOutsideCombatTimer = new SimpleTimer();
 
-    [Header("Combat")]
+    [Header("Combat")] [Range(0, 1)] public float attackDefendBaseProbability = 0.5f;
+
     [Range(0, 1)] public float comboContinueProbability = 0.9f;
+    public RangeInt opponentParrySpamThreshold = new RangeInt(4, 8);
     public SimpleTimer combatActionTimer = new SimpleTimer();
     public SimpleTimer blockTimer = new SimpleTimer();
+    public SimpleTimer dodgeTimer = new SimpleTimer();
+    public SimpleTimer postAttackTimer = new SimpleTimer();
+    public SimpleTimer postOpponentAttackTimer = new SimpleTimer();
+
+    [Header("Attack Combat Modifiers")] public float justAttackedWindow = 0.5f;
+    public CombatModifier attackAfterDodgeModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.1f));
+
+    public CombatModifier attackAfterOpponentStrikesModifier = new CombatModifier(0.3f, new RangeFloat(0, 0.1f));
+
+    [Range(0, 1)] public float lightHeavyBaseProbability = 0.8f;
+    public CombatModifier heavyIfOppenentShieldsModifier = new CombatModifier(0.3f, new RangeFloat(0, 0.1f));
+    public CombatModifier heavyIfOppenentParrySpamModifier = new CombatModifier(0.75f, new RangeFloat(0, 0.6f));
+
+    [Header("Defend Combat Modifiers")]
+    public CombatModifier defendAfterAttackModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.1f));
+
+    public CombatModifier defendOnIncomingAttackModifier = new CombatModifier(0.2f, new RangeFloat(0, 0.1f));
+
+    [Range(0, 1)] public float blockDodgeBaseProbability = 0.7f;
+    public CombatModifier blockAfterAttackModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.1f));
+    public CombatModifier blockOnIncomingAttackModifier = new CombatModifier(0.6f, new RangeFloat(0, 0.1f));
+    [Range(0, 1)] public float parryOnIncomingAttackProbability = 0.1f;
+
+    public float justDodgedWindow = 0.5f;
+    public CombatModifier dodgeRandomModifier = new CombatModifier(0.1f, new RangeFloat(0, 0.2f));
 
     [Header("Data")] [Range(0, 1)] public float curAggression = 0.5f;
     public float moveTargetDist = 15f;
@@ -60,6 +105,16 @@ public class AIController : MonoBehaviour
 
     private bool continueCombo = false;
 
+    private bool opponentIsShielding => targetCharacter.characterMeleeController.isShielding;
+
+    private bool opponentIsSpammingParry => targetCharacter.characterMeleeController.continuousParryAttempts >=
+                                            opponentParrySpamThreshold.selected;
+
+    private bool justFinishedAttacking => !postAttackTimer.expired;
+    private bool incomingAttackDetected => targetCharacter.characterMeleeController.isAttackSequenceActive;
+    private bool justDodged => dodgeTimer.expired && dodgeTimer.timeSinceExpiry < justDodgedWindow;
+    private bool opponentAttackJustEnded => !postOpponentAttackTimer.expired;
+
     void Awake()
     {
         characterModel = GetComponent<CharacterModel>();
@@ -72,10 +127,23 @@ public class AIController : MonoBehaviour
 
         combatActionTimer.Expire();
         blockTimer.Expire();
+        dodgeTimer.Expire();
+        postAttackTimer.Expire();
+        postOpponentAttackTimer.Expire();
+
+        characterModel.characterAnimEventHandler.onMeleeAttackSequenceEnded += () => { postAttackTimer.Reset(); };
 
         characterModel.characterAnimEventHandler.onComboContinueCheckStarted += () =>
         {
-            continueCombo = Random.Range(0f, 1f) < comboContinueProbability;
+            // TODO: Make use of stats
+
+            continueCombo = TestProbability(comboContinueProbability);
+        };
+
+        characterModel.onInitialized += () =>
+        {
+            targetCharacter.characterAnimEventHandler.onMeleeAttackSequenceEnded +=
+                () => { postOpponentAttackTimer.Reset(); };
         };
     }
 
@@ -111,6 +179,9 @@ public class AIController : MonoBehaviour
         dodgeOutsideCombatTimer.Update();
         combatActionTimer.Update();
         blockTimer.Update();
+        dodgeTimer.Update();
+        postAttackTimer.Update();
+        postOpponentAttackTimer.Update();
 
         var newInput = new CharacterModel.CharacterInput();
 
@@ -121,11 +192,13 @@ public class AIController : MonoBehaviour
                 var toMoveTarget = moveTarget.Value - transform.position;
                 if (toMoveTarget.magnitude > stopDistance)
                 {
-                    if (dodgeOutsideCombatTimer.expired && Random.Range(0f, 1f) < dodgeOutsideCombatProbability)
+                    // TODO: Make use of stats to decide dodge
+                    if (dodgeOutsideCombatTimer.expired && TestProbability(dodgeOutsideCombatProbability))
                     {
                         newInput.Dodge = true;
                         dodgeOutsideCombatTimer.Reset();
                     }
+
                     newInput.Move = transform.InverseTransformDirection(toMoveTarget).normalized;
                 }
                 else
@@ -157,6 +230,7 @@ public class AIController : MonoBehaviour
                     continueCombo = false;
                 }
             }
+
             combatActionTimer.Reset();
         }
         else if (!blockTimer.expired)
@@ -164,32 +238,113 @@ public class AIController : MonoBehaviour
             newInput.IsBlocking = true;
             combatActionTimer.Reset();
         }
-        else if (combatActionTimer.expired)
+        else if (!dodgeTimer.expired)
         {
-            var attackDefendProbability = 0.5f;
-
-            // TODO: Modify Attack/Defend Probability more strategically
-
-            if (Random.Range(0f, 1f) < attackDefendProbability)
+            // No Action Required
+        }
+        else if (combatActionTimer.expired || incomingAttackDetected)
+        {
+            var attackDefendProbability = ProcessAttackDefendProbability();
+            if (TestProbability(attackDefendProbability))
             {
                 // Attack
-                newInput.LightAttack = true;
+                var lightHeavyProbability = lightHeavyBaseProbability;
 
-                // TODO: Choose Light/Heavy strategically
+                if (opponentIsShielding)
+                {
+                    lightHeavyProbability -= heavyIfOppenentShieldsModifier.ProcessDelta();
+                }
+
+                if (opponentIsSpammingParry)
+                {
+                    lightHeavyProbability -= heavyIfOppenentParrySpamModifier.ProcessDelta();
+                }
+
+                if (TestProbability(lightHeavyProbability))
+                {
+                    newInput.LightAttack = true;
+                }
+                else
+                {
+                    newInput.HeavyAttack = true;
+                }
             }
             else
             {
                 // Defend
-                newInput.IsBlocking = true;
-                blockTimer.Reset();
+                var blockDodgeProbability = blockDodgeBaseProbability;
 
-                // TODO: Choose Shield/Dodge strategically
+                if (justFinishedAttacking)
+                {
+                    blockDodgeProbability += blockAfterAttackModifier.ProcessDelta();
+                }
 
-                // TODO: Random Dodges
+                if (incomingAttackDetected)
+                {
+                    blockDodgeProbability += blockOnIncomingAttackModifier.ProcessDelta();
+                }
+
+                blockDodgeProbability -= dodgeRandomModifier.ProcessDelta();
+
+                if (TestProbability(blockDodgeProbability))
+                {
+                    if (!incomingAttackDetected || TestProbability(parryOnIncomingAttackProbability))
+                    {
+                        newInput.AttemptParry = true;
+                    }
+
+                    newInput.IsBlocking = true;
+                    blockTimer.Reset();
+                }
+                else
+                {
+                    newInput.Move = Random.insideUnitSphere;
+                    newInput.Move.y = 0;
+                    newInput.Move.Normalize();
+
+                    newInput.Dodge = true;
+                    dodgeTimer.Reset();
+                }
             }
 
             combatActionTimer.Reset();
         }
+    }
+
+    float ProcessAttackDefendProbability()
+    {
+        var attackDefendProbability = 0.5f;
+
+        // Attack Modifiers
+
+        if (justDodged)
+        {
+            attackDefendProbability += attackAfterDodgeModifier.ProcessDelta();
+        }
+
+        if (opponentAttackJustEnded)
+        {
+            attackDefendProbability += attackAfterOpponentStrikesModifier.ProcessDelta();
+        }
+
+        // Defend Modifiers
+
+        if (justFinishedAttacking)
+        {
+            attackDefendProbability -= defendAfterAttackModifier.ProcessDelta();
+        }
+
+        if (incomingAttackDetected)
+        {
+            attackDefendProbability -= defendOnIncomingAttackModifier.ProcessDelta();
+        }
+
+        return attackDefendProbability;
+    }
+
+    bool TestProbability(float probability)
+    {
+        return HelperUtilities.TestProbability(probability);
     }
 
     void OnAiStatsUpdated()

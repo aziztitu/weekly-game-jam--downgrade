@@ -80,22 +80,33 @@ public class RangeInt
 [Serializable]
 public class SimpleTimer
 {
-    public RangeFloat durationRange = new RangeFloat(3, 3);
+    public RangeFloat durationRange;
 
     public float elapsedTime => _elapsedTime;
     [SerializeField] [ReadOnly] private float _elapsedTime;
 
     public bool expired => elapsedTime >= durationRange.selected;
+    public float timeSinceExpiry => _elapsedTime - durationRange.selected;
+
+    public SimpleTimer(float duration = 3)
+    {
+        durationRange = new RangeFloat(duration, duration);
+    }
 
     public void Update(bool useFixedDeltaTime = false)
     {
         _elapsedTime += useFixedDeltaTime ? Time.fixedDeltaTime : Time.deltaTime;
     }
 
-    public void Reset()
+    public void Reset(bool expireImmediately = false)
     {
         _elapsedTime = 0;
         durationRange.SelectRandom();
+
+        if (expireImmediately)
+        {
+            Expire();
+        }
     }
 
     public void Expire()
@@ -207,6 +218,11 @@ public class HelperUtilities
             items[r] = items[0];
             items[0] = t;
         }
+    }
+
+    public static bool TestProbability(float probability)
+    {
+        return Random.Range(0f, 1f) < probability;
     }
 
     public static int GetOpaqueLayerMaskForRaycast()

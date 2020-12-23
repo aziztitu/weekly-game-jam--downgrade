@@ -191,7 +191,7 @@ MonoBehaviour:
   m_IsWalking: 0
   m_WalkSpeed: 5
   m_RunSpeed: 8
-  m_DodgeSpeed: 8
+  m_DodgeSpeed: 6
   dodgeDuration: 0.6
   dodgeYOffset: -0.4
   dodgeYLerpFactor: 5
@@ -222,9 +222,16 @@ MonoBehaviour:
   shieldHolder: {fileID: 4425516513249979439}
   shieldingAngle: 45
   parryWindow: 0.5
+  parryTimer:
+    durationRange:
+      min: 1
+      max: 1
+    _elapsedTime: 0
+  continuousParryThreshold: 1
   defaultDashSpeed: 8
   attackerPosition: {x: -0.58, y: 1.35, z: 1.29}
   _btnTryShield: 0
+  disableParry: 0
 --- !u!114 &4468325815869187390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,7 +403,11 @@ MonoBehaviour:
       min: 3
       max: 4
     _elapsedTime: 0
+  attackDefendBaseProbability: 0.5
   comboContinueProbability: 0.9
+  opponentParrySpamThreshold:
+    min: 4
+    max: 8
   combatActionTimer:
     durationRange:
       min: 0.3
@@ -407,6 +418,71 @@ MonoBehaviour:
       min: 3
       max: 3
     _elapsedTime: 0
+  dodgeTimer:
+    durationRange:
+      min: 3
+      max: 3
+    _elapsedTime: 0
+  postAttackTimer:
+    durationRange:
+      min: 3
+      max: 3
+    _elapsedTime: 0
+  postOpponentAttackTimer:
+    durationRange:
+      min: 3
+      max: 3
+    _elapsedTime: 0
+  justAttackedWindow: 0.5
+  attackAfterDodgeModifier:
+    probability: 0.5
+    delta:
+      min: 0
+      max: 0.1
+  attackAfterOpponentStrikesModifier:
+    probability: 0.3
+    delta:
+      min: 0
+      max: 0.1
+  lightHeavyBaseProbability: 0.8
+  heavyIfOppenentShieldsModifier:
+    probability: 0.3
+    delta:
+      min: 0
+      max: 0.1
+  heavyIfOppenentParrySpamModifier:
+    probability: 0.75
+    delta:
+      min: 0
+      max: 0.6
+  defendAfterAttackModifier:
+    probability: 0.5
+    delta:
+      min: 0
+      max: 0.1
+  defendOnIncomingAttackModifier:
+    probability: 0.2
+    delta:
+      min: 0
+      max: 0.1
+  blockDodgeBaseProbability: 0.7
+  blockAfterAttackModifier:
+    probability: 0.5
+    delta:
+      min: 0
+      max: 0.1
+  blockOnIncomingAttackModifier:
+    probability: 0.6
+    delta:
+      min: 0
+      max: 0.1
+  parryOnIncomingAttackProbability: 0.1
+  justDodgedWindow: 0.5
+  dodgeRandomModifier:
+    probability: 0.1
+    delta:
+      min: 0
+      max: 0.2
   curAggression: 0.5
   moveTargetDist: 15
   moveTargetDistIsMax: 1

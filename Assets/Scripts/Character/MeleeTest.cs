@@ -17,7 +17,10 @@ public class MeleeTest : MonoBehaviour
 
     public GameObject currentShield { get; private set; }
     public float shieldingAngle = 0;
+    public SimpleTimer shieldTimer = new SimpleTimer(0);
     public float parryWindow = 0.5f;
+    public SimpleTimer parryTimer = new SimpleTimer(1);
+    public float continuousParryThreshold = 1;
 
     [Header("Dash")] public float defaultDashSpeed;
 
@@ -29,9 +32,8 @@ public class MeleeTest : MonoBehaviour
     public bool attemptingToShield => !isAttackSequenceActive && characterModel.characterInput.IsBlocking;
     private bool wasAttemptingToShield = false;
     public bool isShielding => currentShield && attemptingToShield;
-    private float lastShieldStartTime = 0;
-    public float timeSinceLastShieldStartTime => Time.time - lastShieldStartTime;
-    public bool isInParryWindow => timeSinceLastShieldStartTime < parryWindow;
+    public bool isInParryWindow => parryTimer.elapsedTime < parryWindow;
+    [HideInInspector] public bool disableParry = false;
 
     public bool isAttackSequenceActive { get; private set; } = false;
     public bool isLightAttackSequenceActive => isAttackSequenceActive && anim.GetInteger("AttackMode") == 0;
@@ -40,6 +42,8 @@ public class MeleeTest : MonoBehaviour
     public float curDamageMultiplier { get; private set; } = 1;
 
     public bool comboContinued { get; private set; } = false;
+
+    public int continuousParryAttempts { get; private set; } = 0;
 
     private void Awake()
     {
@@ -115,6 +119,13 @@ public class MeleeTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        shieldTimer.Update();
+        parryTimer.Update();
+        if (parryTimer.expired && parryTimer.timeSinceExpiry > continuousParryThreshold)
+        {
+            continuousParryAttempts = 0;
+        }
+
         if (characterModel.isDead)
         {
             anim.SetBool("IsAttacking", false);
@@ -141,7 +152,14 @@ public class MeleeTest : MonoBehaviour
 
         if (attemptingToShield && !wasAttemptingToShield)
         {
-            lastShieldStartTime = Time.time;
+            shieldTimer.Reset();
+
+            disableParry = !characterModel.characterInput.AttemptParry || !parryTimer.expired;
+            if (!disableParry)
+            {
+                continuousParryAttempts++;
+                parryTimer.Reset();
+            }
         }
 
         if (currentShield)
@@ -262,17 +280,22 @@ public class MeleeTest : MonoBehaviour
 
     public bool OnIncomingAttack(CharacterModel attacker, float damage, out bool parried)
     {
-        if (attemptingToShield && isInParryWindow)
-        {
-            parried = true;
-            Parry(attacker);
-            return false;
-        }
-
         parried = false;
-        if (isShielding && CanBlock(attacker.transform.position))
+
+        var isHeavyAttack = attacker.characterMeleeController.isHeavyAttackSequenceActive;
+        if (!isHeavyAttack)
         {
-            return false;
+            if (attemptingToShield && isInParryWindow && !disableParry)
+            {
+                parried = true;
+                Parry(attacker);
+                return false;
+            }
+
+            if (isShielding && CanBlock(attacker.transform.position))
+            {
+                return false;
+            }
         }
 
         characterModel.health.TakeDamage(damage);

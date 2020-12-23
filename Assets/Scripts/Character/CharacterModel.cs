@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CharacterModel : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class CharacterModel : MonoBehaviour
         public bool LightAttack;
         public bool HeavyAttack;
         public bool IsBlocking;
+        public bool AttemptParry;
 
         public bool Dodge;
         public bool Taunt;
@@ -66,6 +69,8 @@ public class CharacterModel : MonoBehaviour
 
     private bool isShakingCam = false;
 
+    public event Action onInitialized;
+
     void Awake()
     {
         characterMovementController = GetComponent<CharacterMovementController>();
@@ -115,5 +120,10 @@ public class CharacterModel : MonoBehaviour
         {
             health.UpdateHealth(healthRegenerationSpeed * Time.deltaTime);
         }*/
+    }
+
+    public void OnInitialized()
+    {
+        this.onInitialized?.Invoke();
     }
 }

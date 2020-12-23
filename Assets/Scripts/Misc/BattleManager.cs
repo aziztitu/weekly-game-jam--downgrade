@@ -149,6 +149,11 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             spawnedCharacters[0].lockedOnTarget = spawnedCharacters[1].transform;
             spawnedCharacters[1].lockedOnTarget = spawnedCharacters[0].transform;
         }
+
+        foreach (var character in spawnedCharacters)
+        {
+            character.OnInitialized();
+        }
     }
 
     void OnCharacterDied(int characterIndex)
