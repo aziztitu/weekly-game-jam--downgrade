@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class MeleeAttackSequenceState : StateMachineBehaviour
 {
+    public bool isEntry = false;
+    public bool isExit = false;
+
+    public float avatarYRotationOffset = 0;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        var charModel = animator.GetComponentInParent<CharacterModel>();
-        charModel.characterAnimEventHandler.MeleeAttackSequenceStart();
+        if (isEntry)
+        {
+            var charModel = animator.GetComponentInParent<CharacterModel>();
+            charModel.characterAnimEventHandler.MeleeAttackSequenceStart();
+        }
 
 //        animator.applyRootMotion = true;
     }
@@ -22,13 +30,16 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        var charModel = animator.GetComponentInParent<CharacterModel>();
-        // if (charModel.characterCombatController.isAttacking)
+        if (isExit)
         {
-            charModel.characterAnimEventHandler.MeleeAttackEnd();
+            var charModel = animator.GetComponentInParent<CharacterModel>();
+            if (charModel.characterMeleeController.isAttackSequenceActive)
+            {
+                charModel.characterAnimEventHandler.MeleeAttackEnd();
+            }
+            charModel.characterAnimEventHandler.MeleeAttackSequenceEnd();
+            animator.applyRootMotion = false;
         }
-        charModel.characterAnimEventHandler.MeleeAttackSequenceEnd();
-        animator.applyRootMotion = false;
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

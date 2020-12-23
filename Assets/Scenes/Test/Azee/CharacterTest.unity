@@ -324,6 +324,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
+    - target: {fileID: 4468325815869187388, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187391, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -2546,5 +2550,25 @@ PrefabInstance:
       propertyPath: characterSpawnPoints.Array.data[1]
       value: 
       objectReference: {fileID: 536374792}
+    - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: downgradeStages.Array.data[0].shieldPrefab
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: downgradeStages.Array.data[0].weaponPrefab
+      value: 
+      objectReference: {fileID: 3112698765591090505, guid: 64361a1cf1984394f8d5bf0cce8bd948, type: 3}
+    - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: downgradeStages.Array.data[1].weaponPrefab
+      value: 
+      objectReference: {fileID: 5548709590341192033, guid: a2fb207fb7c18ee46a49564840db3d1d, type: 3}
+    - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: downgradeStages.Array.data[2].shieldPrefab
+      value: 
+      objectReference: {fileID: 310801043524890432, guid: 4d3d05d36a6573e49b7ff392bbcb83ed, type: 3}
+    - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: downgradeStages.Array.data[2].weaponPrefab
+      value: 
+      objectReference: {fileID: 4824267053699612765, guid: ca8f830b7ba6b054fa0a9a984230992e, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d995523805293146afcbf25a23ba782, type: 3}
