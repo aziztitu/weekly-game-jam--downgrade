@@ -20,6 +20,7 @@ public class CharacterModel : MonoBehaviour
 
     public CharacterMovementController characterMovementController { get; private set; }
     public PlayerInputController playerInputController { get; private set; }
+    public AIController aiController { get; private set; }
     public MeleeTest characterMeleeController { get; private set; }
     public CharacterAnimEventHandler characterAnimEventHandler { get; private set; }
     public Animator animator { get; private set; }
@@ -68,6 +69,7 @@ public class CharacterModel : MonoBehaviour
     {
         characterMovementController = GetComponent<CharacterMovementController>();
         playerInputController = GetComponent<PlayerInputController>();
+        aiController = GetComponent<AIController>();
         characterMeleeController = GetComponent<MeleeTest>();
         animator = GetComponentInChildren<Animator>(false);
         characterAnimEventHandler = animator.GetComponent<CharacterAnimEventHandler>();

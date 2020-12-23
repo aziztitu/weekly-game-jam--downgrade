@@ -19,6 +19,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     {
         public CharacterData character;
         public bool isLocalPlayer;
+        public bool isAI => !isLocalPlayer;
     }
 
     [Serializable]
@@ -103,7 +104,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             var characterModel = Instantiate(characterSelection.character.prefab, spawnPoint.position, spawnPoint.rotation)
                 .GetComponent<CharacterModel>();
 
-            characterModel.GetComponent<PlayerInputController>().enabled = characterSelection.isLocalPlayer;
+            characterModel.playerInputController.enabled = characterSelection.isLocalPlayer;
+            characterModel.aiController.enabled = characterSelection.isAI;
             characterModel.characterSelectionData = characterSelection;
             characterModel.characterIndex = i;
 
