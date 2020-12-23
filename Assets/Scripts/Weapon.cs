@@ -18,6 +18,11 @@ public class Weapon : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (!owner.characterMeleeController.isAttackSequenceActive)
+        {
+            return;
+        }
+
         if (other.transform.tag == "Character")
         {
             CharacterModel otherCharacterModel = other.GetComponent<CharacterModel>();

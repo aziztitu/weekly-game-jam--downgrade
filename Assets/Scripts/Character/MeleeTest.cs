@@ -19,6 +19,8 @@ public class MeleeTest : MonoBehaviour
     public float shieldingAngle = 0;
     public float parryWindow = 0.5f;
 
+    [Header("Dash")] public float defaultDashSpeed;
+
     [Header("Debug")] public Vector3 attackerPosition;
 
     [Button("Try Shield", "TryShield")] [SerializeField]
@@ -57,22 +59,48 @@ public class MeleeTest : MonoBehaviour
             {
                 this.isAttackSequenceActive = false;
                 UpdateWeaponCollider(false);
+                characterModel.characterMovementController.StopDashing();
             };
 
         characterModel.characterAnimEventHandler.onMeleeAttackStarted += (int comboIndex, float damageMultiplier) =>
         {
+            if (!isAttackSequenceActive)
+            {
+                return;
+            }
+
             UpdateWeaponCollider(true);
             curDamageMultiplier = damageMultiplier;
         };
-        characterModel.characterAnimEventHandler.onMeleeAttackEnded += () => { UpdateWeaponCollider(false); };
+        characterModel.characterAnimEventHandler.onMeleeAttackEnded += () =>
+        {
+            UpdateWeaponCollider(false);
+            characterModel.characterMovementController.StopDashing();
+        };
         characterModel.characterAnimEventHandler.onComboContinueCheckStarted += () => { comboContinued = false; };
         characterModel.characterAnimEventHandler.onComboContinueCheckEnded += () =>
         {
             if (!comboContinued)
             {
                 anim.SetTrigger("CancelCombo");
+                this.isAttackSequenceActive = false;
             }
         };
+
+        characterModel.characterAnimEventHandler.onMeleeDashStarted += speed =>
+        {
+            if (!isAttackSequenceActive)
+            {
+                return;
+            }
+
+            characterModel.characterMovementController.DashTowards(characterModel.lockedOnTargetPos,
+                defaultDashSpeed * (speed > 0 ? speed : 1), -1);
+        };
+        characterModel.characterAnimEventHandler.onMeleeDashEnded += () =>
+            {
+                characterModel.characterMovementController.StopDashing();
+            };
     }
 
     void OnDrawGizmos()

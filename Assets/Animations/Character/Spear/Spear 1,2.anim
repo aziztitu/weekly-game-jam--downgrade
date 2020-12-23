@@ -65454,6 +65454,13 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0.3
+    functionName: MeleeDashStart
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.51514417
     functionName: MeleeAttackStart
     data: 
@@ -65463,6 +65470,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.5428503
     functionName: ComboContinueCheckStart
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.73333335
+    functionName: MeleeDashEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -65496,8 +65510,22 @@ AnimationClip:
     floatParameter: 1
     intParameter: 1
     messageOptions: 0
+  - time: 1.3333334
+    functionName: MeleeDashStart
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 1.5666667
     functionName: MeleeAttackEnd
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.7666667
+    functionName: MeleeDashEnd
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

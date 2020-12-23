@@ -11,6 +11,8 @@ public class CharacterAnimEventHandler : MonoBehaviour
     public event Action onMeleeAttackSequenceEnded;
     public event Action<int, float> onMeleeAttackStarted;
     public event Action onMeleeAttackEnded;
+    public event Action<float> onMeleeDashStarted;
+    public event Action onMeleeDashEnded;
     public event Action onComboContinueCheckStarted;
     public event Action onComboContinueCheckEnded;
     public event Action<float> onZoomRequestStarted;
@@ -68,6 +70,16 @@ public class CharacterAnimEventHandler : MonoBehaviour
     {
         Debug.Log("Melee Attack Ended");
         onMeleeAttackEnded?.Invoke();
+    }
+
+    public void MeleeDashStart(AnimationEvent animationEvent)
+    {
+        onMeleeDashStarted?.Invoke(animationEvent.floatParameter);
+    }
+
+    public void MeleeDashEnd()
+    {
+        onMeleeDashEnded?.Invoke();
     }
 
     public void ComboContinueCheckStart()

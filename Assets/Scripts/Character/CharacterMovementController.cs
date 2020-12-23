@@ -50,6 +50,12 @@ public class CharacterMovementController : MonoBehaviour
     private float timeSinceDodgeStart = 0;
     private Vector3 dodgeDir;
 
+    bool isDashing = false;
+    private float timeSinceDashStart = 0;
+    private Vector3 dashDir;
+    private float dashSpeed;
+    private float dashDuration = 1;
+
     private Vector3 originalAvatarPosition;
 
     private class GizmosData
@@ -75,6 +81,7 @@ public class CharacterMovementController : MonoBehaviour
 
         originalAvatarPosition = characterModel.avatar.localPosition;
         timeSinceDodgeStart = dodgeDuration * 2;
+        timeSinceDashStart = 10;
     }
 
     public void OnDrawGizmos()
@@ -154,6 +161,7 @@ public class CharacterMovementController : MonoBehaviour
         }
 
         timeSinceDodgeStart += Time.fixedDeltaTime;
+        timeSinceDashStart += Time.fixedDeltaTime;
 
         var dodgeAvatarPosition = originalAvatarPosition;
         dodgeAvatarPosition.y += dodgeYOffset;
@@ -169,12 +177,22 @@ public class CharacterMovementController : MonoBehaviour
                 isDodging = false;
             }
         }
+        else if (isDashing)
+        {
+            PerformDash();
+
+            if (dashDuration > 0 && timeSinceDashStart >= dashDuration)
+            {
+                isDashing = false;
+            }
+
+            UpdateMoveAnimation(0, 0, true, false);
+        }
         else
         {
             if (!characterModel.characterMeleeController.isAttackSequenceActive)
             {
-                float speed;
-                GetInput(out speed);
+                GetInput(out var speed);
 
                 Move(speed);
 
@@ -200,6 +218,20 @@ public class CharacterMovementController : MonoBehaviour
 
         characterModel.avatar.localPosition = Vector3.Lerp(originalAvatarPosition, dodgeAvatarPosition,
             avatarPositionLerpValue);
+    }
+
+    public void DashTowards(Vector3 worldPos, float speed, float duration)
+    {
+        dashDir = worldPos - transform.position;
+        dashDir.y = 0;
+        dashDir.Normalize();
+
+        timeSinceDashStart = 0;
+
+        dashSpeed = speed;
+        dashDuration = duration;
+
+        isDashing = true;
     }
 
     private void adjustCurSpeed(float speed)
@@ -240,6 +272,22 @@ public class CharacterMovementController : MonoBehaviour
 
         var targetRot = Quaternion.LookRotation(dodgeDir);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * 2 * Time.fixedDeltaTime);
+    }
+
+    private void PerformDash()
+    {
+        adjustCurSpeed(dashSpeed);
+        m_CollisionFlags = m_CharacterController.Move(dashDir * curSpeed * Time.fixedDeltaTime);
+
+        // ApplyGravity();
+
+        var targetRot = Quaternion.LookRotation(dashDir);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * 2 * Time.fixedDeltaTime);
+    }
+
+    public void StopDashing()
+    {
+        isDashing = false;
     }
 
     private void Move(float speed)
@@ -319,23 +367,28 @@ public class CharacterMovementController : MonoBehaviour
 
         if (desiredMove.magnitude > 0 || characterModel.characterMeleeController.attemptingToShield)
         {
-            //            Vector3 lookAtTarget = transform.position +
-            //                                   (thirdPersonCamera.virtualCamera.transform.forward * 5);
-            // Vector3 lookAtTarget = transform.position + (desiredMove * 5);
-            Vector3 lookAtTarget = characterModel.lockedOnTargetPos;
-            lookAtTarget.y = transform.position.y;
-
-            Vector3 targetForward = lookAtTarget - transform.position;
-            targetForward.Normalize();
-
-//            transform.forward = Vector3.Lerp(transform.forward, targetForward, turnSpeed * Time.fixedDeltaTime);
-
-            var targetRot = Quaternion.LookRotation(targetForward);
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.fixedDeltaTime);
+            TurnTowardsLockedTarget();
         }
 
         m_MoveDir.x = desiredMove.x * speed;
         m_MoveDir.z = desiredMove.z * speed;
+    }
+
+    private void TurnTowardsLockedTarget()
+    {
+        //            Vector3 lookAtTarget = transform.position +
+        //                                   (thirdPersonCamera.virtualCamera.transform.forward * 5);
+        // Vector3 lookAtTarget = transform.position + (desiredMove * 5);
+        Vector3 lookAtTarget = characterModel.lockedOnTargetPos;
+        lookAtTarget.y = transform.position.y;
+
+        Vector3 targetForward = lookAtTarget - transform.position;
+        targetForward.Normalize();
+
+        //            transform.forward = Vector3.Lerp(transform.forward, targetForward, turnSpeed * Time.fixedDeltaTime);
+
+        var targetRot = Quaternion.LookRotation(targetForward);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRot, turnSpeed * Time.fixedDeltaTime);
     }
 
     private void PlayLandingSound()
