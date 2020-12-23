@@ -330,7 +330,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187388, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187391, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_RootOrder
@@ -338,7 +338,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187391, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.7426476
+      value: 7.36
       objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187391, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -346,7 +346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187391, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.9643726
+      value: -0.11
       objectReference: {fileID: 0}
     - target: {fileID: 4468325815869187391, guid: 48889ec0bc9d17543b69b08602b0e0d9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -396,7 +396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &306184288
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -681,7 +681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &441485367
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -806,7 +806,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &615236022
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1639,7 +1639,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1641921501
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1734,7 +1734,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &1691938461
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1829,7 +1829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &2107402946
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2557,11 +2557,11 @@ PrefabInstance:
     - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: downgradeStages.Array.data[0].shieldPrefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 310801043524890432, guid: 4d3d05d36a6573e49b7ff392bbcb83ed, type: 3}
     - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: downgradeStages.Array.data[0].weaponPrefab
       value: 
-      objectReference: {fileID: 3112698765591090505, guid: 64361a1cf1984394f8d5bf0cce8bd948, type: 3}
+      objectReference: {fileID: 4824267053699612765, guid: ca8f830b7ba6b054fa0a9a984230992e, type: 3}
     - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: downgradeStages.Array.data[1].shieldPrefab
       value: 
@@ -2569,14 +2569,14 @@ PrefabInstance:
     - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: downgradeStages.Array.data[1].weaponPrefab
       value: 
-      objectReference: {fileID: 4824267053699612765, guid: ca8f830b7ba6b054fa0a9a984230992e, type: 3}
+      objectReference: {fileID: 5548709590341192033, guid: a2fb207fb7c18ee46a49564840db3d1d, type: 3}
     - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: downgradeStages.Array.data[2].shieldPrefab
       value: 
-      objectReference: {fileID: 310801043524890432, guid: 4d3d05d36a6573e49b7ff392bbcb83ed, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5567057826295009361, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: downgradeStages.Array.data[2].weaponPrefab
       value: 
-      objectReference: {fileID: 5548709590341192033, guid: a2fb207fb7c18ee46a49564840db3d1d, type: 3}
+      objectReference: {fileID: 3112698765591090505, guid: 64361a1cf1984394f8d5bf0cce8bd948, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d995523805293146afcbf25a23ba782, type: 3}

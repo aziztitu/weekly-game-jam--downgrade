@@ -29,6 +29,9 @@ public class RangeFloat
     public float min;
     public float max;
 
+    public float selected => _selected ?? SelectRandom();
+    private float? _selected = null;
+
     public RangeFloat(float _min, float _max)
     {
         min = _min;
@@ -39,6 +42,12 @@ public class RangeFloat
     {
         return Random.Range(min, max);
     }
+
+    public float SelectRandom()
+    {
+        _selected = GetRandom();
+        return selected;
+    }
 }
 
 [Serializable]
@@ -47,15 +56,51 @@ public class RangeInt
     public int min;
     [Tooltip("Inclusive")] public int max;
 
+    public int selected => _selected ?? SelectRandom();
+    private int? _selected = null;
+
     public RangeInt(int _min, int _max)
     {
         min = _min;
         max = _max;
     }
 
-    public float GetRandom()
+    public int GetRandom()
     {
         return Random.Range(min, max + 1);
+    }
+
+    public int SelectRandom()
+    {
+        _selected = GetRandom();
+        return selected;
+    }
+}
+
+[Serializable]
+public class SimpleTimer
+{
+    public RangeFloat durationRange = new RangeFloat(3, 3);
+
+    public float elapsedTime => _elapsedTime;
+    [SerializeField] [ReadOnly] private float _elapsedTime;
+
+    public bool expired => elapsedTime >= durationRange.selected;
+
+    public void Update(bool useFixedDeltaTime = false)
+    {
+        _elapsedTime += useFixedDeltaTime ? Time.fixedDeltaTime : Time.deltaTime;
+    }
+
+    public void Reset()
+    {
+        _elapsedTime = 0;
+        durationRange.SelectRandom();
+    }
+
+    public void Expire()
+    {
+        _elapsedTime = durationRange.selected;
     }
 }
 

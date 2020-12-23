@@ -34,6 +34,9 @@ public class MeleeTest : MonoBehaviour
     public bool isInParryWindow => timeSinceLastShieldStartTime < parryWindow;
 
     public bool isAttackSequenceActive { get; private set; } = false;
+    public bool isLightAttackSequenceActive => isAttackSequenceActive && anim.GetInteger("AttackMode") == 0;
+    public bool isHeavyAttackSequenceActive => isAttackSequenceActive && anim.GetInteger("AttackMode") == 1;
+
     public float curDamageMultiplier { get; private set; } = 1;
 
     public bool comboContinued { get; private set; } = false;

@@ -361,11 +361,61 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4468325815869187388}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e315a7e8bd394444916a716c95f1d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats:
+    baseAggression: 0.5
+    smartness: 0.5
+    preferredDistFromTargetRange:
+      min: 5
+      max: 8
+    aggressionLimits:
+      min: 0
+      max: 1
+    idleAggChangeRateRange:
+      min: 0.04
+      max: 0.1
+    idleAggChangeThresholdRange:
+      min: 3
+      max: 6
+    activeAggChangeRateRange:
+      min: 0.04
+      max: 0.1
+    activeAggChangeThresholdRange:
+      min: 3
+      max: 6
+  combatRadiusRange:
+    min: 0.7
+    max: 2
+  dodgeOutsideCombatProbability: 0.05
+  dodgeOutsideCombatTimer:
+    durationRange:
+      min: 3
+      max: 4
+    _elapsedTime: 0
+  comboContinueProbability: 0.9
+  combatActionTimer:
+    durationRange:
+      min: 0.3
+      max: 1.5
+    _elapsedTime: 0
+  blockTimer:
+    durationRange:
+      min: 3
+      max: 3
+    _elapsedTime: 0
+  curAggression: 0.5
+  moveTargetDist: 15
+  moveTargetDistIsMax: 1
+  stopDistance: 0.5
+  moveLerpFactor: 10
+  updateMoveTargetIntervalRange:
+    min: 2
+    max: 4
+  timeSinceLastUpdateMoveTarget: 3.4028235e+38
 --- !u!1 &4468325815937701775
 GameObject:
   m_ObjectHideFlags: 0

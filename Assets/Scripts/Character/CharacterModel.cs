@@ -13,6 +13,7 @@ public class CharacterModel : MonoBehaviour
         public bool IsBlocking;
 
         public bool Dodge;
+        public bool Taunt;
         //        public bool Sprint;
     }
 

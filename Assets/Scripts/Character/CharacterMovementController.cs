@@ -58,6 +58,9 @@ public class CharacterMovementController : MonoBehaviour
 
     private Vector3 originalAvatarPosition;
 
+    private Transform frameOfReference =>
+        characterModel.isLocalPlayer ? ThirdPersonCamera.Instance.virtualCamera.transform : transform;
+
     private class GizmosData
     {
         public Vector3 raycastDir;
@@ -92,7 +95,7 @@ public class CharacterMovementController : MonoBehaviour
         Gizmos.color = Color.red;
         if (characterModel)
         {
-            Gizmos.DrawRay(transform.position, ThirdPersonCamera.Instance.virtualCamera.transform.TransformDirection(
+            Gizmos.DrawRay(transform.position, frameOfReference.TransformDirection(
                                                    characterModel.characterInput.Move
                                                        .normalized).normalized * 10);
         }
@@ -135,7 +138,7 @@ public class CharacterMovementController : MonoBehaviour
             isDodging = true;
             var moveDir = characterModel.characterInput.Move;
             dodgeDir = moveDir.magnitude > 0.1
-                ? ThirdPersonCamera.Instance.virtualCamera.transform.TransformDirection(moveDir)
+                ? frameOfReference.TransformDirection(moveDir)
                 : transform.forward;
 
             dodgeDir.y = 0;
@@ -313,7 +316,7 @@ public class CharacterMovementController : MonoBehaviour
 
         //Vector3 toLockTarget = (characterModel.lockedOnTargetPos - transform.position).normalized;
         float angleToLockTarget = Vector3.SignedAngle(transform.forward,
-                                      ThirdPersonCamera.Instance.virtualCamera.transform.TransformDirection(
+                                      frameOfReference.TransformDirection(
                                           characterModel.characterInput.Move
                                               .normalized), Vector3.up) * Mathf.Deg2Rad;
 
@@ -342,13 +345,11 @@ public class CharacterMovementController : MonoBehaviour
 
     private void TPMove(float speed)
     {
-        ThirdPersonCamera thirdPersonCamera = ThirdPersonCamera.Instance;
-
         Vector3 desiredMove = Vector3.zero;
-        if (thirdPersonCamera)
+        if (frameOfReference)
         {
-            Vector3 forwardDir = thirdPersonCamera.virtualCamera.transform.forward;
-            Vector3 rightDir = thirdPersonCamera.virtualCamera.transform.right;
+            Vector3 forwardDir = frameOfReference.forward;
+            Vector3 rightDir = frameOfReference.right;
 
             forwardDir.y = 0;
             rightDir.y = 0;
