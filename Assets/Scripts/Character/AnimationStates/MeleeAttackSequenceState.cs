@@ -43,6 +43,7 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
 
         if (applyRootMotion)
         {
+            charModel.avatarModel.localPosition = Vector3.zero;
             animator.applyRootMotion = true;
         }
     }
