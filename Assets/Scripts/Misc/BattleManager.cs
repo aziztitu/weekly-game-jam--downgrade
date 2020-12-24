@@ -158,7 +158,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
     void OnCharacterDied(int characterIndex)
     {
-        Debug.Log(characterIndex);
+        // Debug.Log(characterIndex);
         var aliveCharacters = spawnedCharacters.Where((model => model.isAlive)).ToList();
         if (aliveCharacters.Count == 1)
         {

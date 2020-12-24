@@ -32,7 +32,6 @@ public class CharacterAnimEventHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     public void DeathEnd()
@@ -47,7 +46,7 @@ public class CharacterAnimEventHandler : MonoBehaviour
 
     public void MeleeAttackSequenceStart()
     {
-        Debug.Log("Melee Attack Sequence Started");
+        // Debug.Log("Melee Attack Sequence Started");
         onMeleeAttackSequenceStarted?.Invoke();
     }
 
@@ -58,7 +57,7 @@ public class CharacterAnimEventHandler : MonoBehaviour
             owner.characterAnimEventHandler.MeleeAttackEnd();
         }*/
 
-        Debug.Log("Melee Attack Sequence Ended");
+        //Debug.Log("Melee Attack Sequence Ended");
         checkingComboContinue = false;
         onMeleeAttackSequenceEnded?.Invoke();
 
@@ -72,13 +71,13 @@ public class CharacterAnimEventHandler : MonoBehaviour
 
     public void MeleeAttackStart(AnimationEvent animationEvent)
     {
-        Debug.Log($"Melee Attack Started: {animationEvent.intParameter}, {animationEvent.floatParameter}");
+        // Debug.Log($"Melee Attack Started: {animationEvent.intParameter}, {animationEvent.floatParameter}");
         onMeleeAttackStarted?.Invoke(animationEvent.intParameter, animationEvent.floatParameter);
     }
 
     public void MeleeAttackEnd()
     {
-        Debug.Log("Melee Attack Ended");
+        // Debug.Log("Melee Attack Ended");
         onMeleeAttackEnded?.Invoke();
     }
 
