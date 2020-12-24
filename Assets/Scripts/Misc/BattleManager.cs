@@ -81,6 +81,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             GameManager.Instance.battleData = new BattleData();
             GameManager.Instance.battleData.Initialize(numCharacters);
         }
+
+        HelperUtilities.UpdateCursorLock(true);
     }
 
     // Start is called before the first frame update

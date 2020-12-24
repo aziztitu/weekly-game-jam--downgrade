@@ -166,9 +166,9 @@ RectTransform:
   m_Father: {fileID: 6019150586668682290}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 652.5, y: -97}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 205, y: -182}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6019150585543326390
@@ -426,13 +426,14 @@ GameObject:
   - component: {fileID: 6019150586431347573}
   - component: {fileID: 6019150586431347571}
   - component: {fileID: 6019150586431347572}
+  - component: {fileID: 1131557507}
   m_Layer: 5
   m_Name: Controls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6019150586431347573
 RectTransform:
   m_ObjectHideFlags: 0
@@ -494,6 +495,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1131557507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6019150586431347574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc67fdbb44113ca45896d113592929f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectOnShow: {fileID: 0}
+  selectOnEnable: 0
+  enablePreSequence: 1
+  fadeDuration: 0.4
 --- !u!1 &6019150586668682291
 GameObject:
   m_ObjectHideFlags: 0
@@ -631,9 +648,9 @@ RectTransform:
   m_Father: {fileID: 6019150586668682290}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 152.5, y: -97}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 205, y: -182}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6019150586881241247
@@ -778,9 +795,9 @@ RectTransform:
   m_Father: {fileID: 6019150586668682290}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 402.5, y: -97}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 205, y: -182}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6019150587287989018
@@ -900,6 +917,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6019150586431347573}
     m_Modifications:
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1131557507}
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Hide
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MenuPage, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844530415374376152, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6844530415374376153, guid: 11edb5722a1cb494b9d76974f352c6b4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

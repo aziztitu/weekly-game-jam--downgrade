@@ -7,6 +7,7 @@ public class HUD : SingletonMonoBehaviour<HUD>
 {
     [Header("Round Intro")] public MenuPage roundIntro;
     public TextMeshProUGUI roundText;
+    public float roundIntroDuration = 2f;
 
     [Header("Core HUD")] public MenuPage coreHUD;
 
@@ -32,6 +33,6 @@ public class HUD : SingletonMonoBehaviour<HUD>
         {
             roundIntro.Hide();
             coreHUD.Show();
-        }, 3f);
+        }, roundIntroDuration);
     }
 }
