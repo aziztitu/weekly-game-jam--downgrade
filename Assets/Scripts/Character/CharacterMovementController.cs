@@ -170,7 +170,7 @@ public class CharacterMovementController : MonoBehaviour
 
         if (characterModel.isDead)
         {
-            UpdateMoveAnimation(0, 0, true, false);
+            Move(0);
             return;
         }
 

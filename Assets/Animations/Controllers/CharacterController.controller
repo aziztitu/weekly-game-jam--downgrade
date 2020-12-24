@@ -1792,7 +1792,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: LightImpact
-  m_Speed: 0.4
+  m_Speed: 0.8
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 3447617385656853669}
@@ -2830,7 +2830,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Heavy Impact
-  m_Speed: 0.4
+  m_Speed: 0.8
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3088604424276892373}

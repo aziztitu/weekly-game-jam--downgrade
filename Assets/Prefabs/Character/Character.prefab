@@ -494,6 +494,16 @@ MonoBehaviour:
     delta:
       min: 0.1
       max: 0.2
+  attackIfOpponentStunnedModifier:
+    probability: 0.9
+    delta:
+      min: 0.2
+      max: 0.4
+  attackOnIncomingHeavyAttackModifier:
+    probability: 0.65
+    delta:
+      min: 0
+      max: 0.2
   lightHeavyBaseProbability: 0.8
   heavyIfOppenentShieldsModifier:
     probability: 0.8
@@ -505,16 +515,26 @@ MonoBehaviour:
     delta:
       min: 0.3
       max: 0.6
+  lightOnIncomingHeavyAttackModifier:
+    probability: 0.9
+    delta:
+      min: 0
+      max: 0.2
   defendAfterAttackModifier:
     probability: 0.5
     delta:
       min: 0
       max: 0.1
-  defendOnIncomingAttackModifier:
-    probability: 0.8
+  defendOnIncomingLightAttackModifier:
+    probability: 0.2
     delta:
-      min: 0.2
-      max: 0.5
+      min: 0
+      max: 0.1
+  defendOnIncomingHeavyAttackModifier:
+    probability: 0.1
+    delta:
+      min: 0
+      max: 0.05
   blockDodgeBaseProbability: 0.9
   blockAfterAttackModifier:
     probability: 0.7
@@ -526,7 +546,12 @@ MonoBehaviour:
     delta:
       min: 0.1
       max: 0.2
-  parryOnIncomingAttackProbability: 0.1
+  parryOnIncomingAttackProbability: 0.3
+  dodgeOnIncomingHeavyAttackModifier:
+    probability: 0.9
+    delta:
+      min: 0.2
+      max: 0.5
   justDodgedWindow: 0.5
   dodgeRandomModifier:
     probability: 0.3

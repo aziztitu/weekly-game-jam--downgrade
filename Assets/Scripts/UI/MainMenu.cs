@@ -22,8 +22,26 @@ public class MainMenu : MonoBehaviour
         
     }
 
-    public void PlaySinglePlayer()
+    public void PlaySinglePlayer(float difficulty = 0.5f)
     {
+        GameManager.Instance.SelectedBattleSettings = new BattleManager.BattleSettings()
+        {
+            characterSelections = new List<BattleManager.CharacterSelection>()
+            {
+                new BattleManager.CharacterSelection()
+                {
+                    character = GameManager.Instance.characters[0],
+                    isLocalPlayer = true,
+                },
+                new BattleManager.CharacterSelection()
+                {
+                    character = GameManager.Instance.characters[0],
+                    isLocalPlayer = false,
+                    aiDifficulty = difficulty,
+                },
+            }
+        };
+
         GameManager.Instance.battleData = new BattleManager.BattleData();
         GameManager.Instance.GoToScene(GameManager.Instance.battleArenaScene);
     }

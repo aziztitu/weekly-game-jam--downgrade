@@ -64,20 +64,25 @@ public class AIController : MonoBehaviour
     public CombatModifier attackAfterDodgeModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.1f));
 
     public CombatModifier attackAfterOpponentStrikesModifier = new CombatModifier(0.3f, new RangeFloat(0, 0.1f));
+    public CombatModifier attackIfOpponentStunnedModifier = new CombatModifier(0.9f, new RangeFloat(0.2f, 0.4f));
+    public CombatModifier attackOnIncomingHeavyAttackModifier = new CombatModifier(0.65f, new RangeFloat(0, 0.2f));
 
     [Range(0, 1)] public float lightHeavyBaseProbability = 0.8f;
     public CombatModifier heavyIfOppenentShieldsModifier = new CombatModifier(0.3f, new RangeFloat(0, 0.1f));
     public CombatModifier heavyIfOppenentParrySpamModifier = new CombatModifier(0.75f, new RangeFloat(0, 0.6f));
+    public CombatModifier lightOnIncomingHeavyAttackModifier = new CombatModifier(0.8f, new RangeFloat(0f, 0.2f));
 
     [Header("Defend Combat Modifiers")]
     public CombatModifier defendAfterAttackModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.1f));
 
-    public CombatModifier defendOnIncomingAttackModifier = new CombatModifier(0.2f, new RangeFloat(0, 0.1f));
+    public CombatModifier defendOnIncomingLightAttackModifier = new CombatModifier(0.2f, new RangeFloat(0, 0.1f));
+    public CombatModifier defendOnIncomingHeavyAttackModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.2f));
 
     [Range(0, 1)] public float blockDodgeBaseProbability = 0.7f;
     public CombatModifier blockAfterAttackModifier = new CombatModifier(0.5f, new RangeFloat(0, 0.1f));
     public CombatModifier blockOnIncomingAttackModifier = new CombatModifier(0.6f, new RangeFloat(0, 0.1f));
     [Range(0, 1)] public float parryOnIncomingAttackProbability = 0.1f;
+    public CombatModifier dodgeOnIncomingHeavyAttackModifier = new CombatModifier(0.8f, new RangeFloat(0.2f, 0.5f));
 
     public float justDodgedWindow = 0.5f;
     public CombatModifier dodgeRandomModifier = new CombatModifier(0.1f, new RangeFloat(0, 0.2f));
@@ -113,8 +118,11 @@ public class AIController : MonoBehaviour
 
     private bool justFinishedAttacking => !postAttackTimer.expired;
     private bool incomingAttackDetected => targetCharacter.characterMeleeController.isAttackSequenceActive;
+    private bool incomingLightAttackDetected => targetCharacter.characterMeleeController.isLightAttackSequenceActive;
+    private bool incomingHeavyAttackDetected => targetCharacter.characterMeleeController.isHeavyAttackSequenceActive;
     private bool justDodged => dodgeTimer.expired && dodgeTimer.timeSinceExpiry < justDodgedWindow;
     private bool opponentAttackJustEnded => !postOpponentAttackTimer.expired;
+    private bool isOpponentStunned => targetCharacter.characterMeleeController.isInHitState;
 
     void Awake()
     {
@@ -247,12 +255,12 @@ public class AIController : MonoBehaviour
 
             combatActionTimer.Reset();
         }
-        else if (!blockTimer.expired)
+        else if (characterModel.characterMeleeController.isShielding && !blockTimer.expired)
         {
             newInput.IsBlocking = true;
             combatActionTimer.Reset();
         }
-        else if (!dodgeTimer.expired)
+        else if (characterModel.characterMovementController.isDodging && !dodgeTimer.expired)
         {
             // No Action Required
         }
@@ -263,6 +271,11 @@ public class AIController : MonoBehaviour
             {
                 // Attack
                 var lightHeavyProbability = lightHeavyBaseProbability;
+
+                if (incomingHeavyAttackDetected)
+                {
+                    lightHeavyProbability += lightOnIncomingHeavyAttackModifier.ProcessDelta();
+                }
 
                 if (opponentIsShielding)
                 {
@@ -296,6 +309,11 @@ public class AIController : MonoBehaviour
                 if (incomingAttackDetected)
                 {
                     blockDodgeProbability += blockOnIncomingAttackModifier.ProcessDelta();
+                }
+
+                if (incomingHeavyAttackDetected)
+                {
+                    blockDodgeProbability -= dodgeOnIncomingHeavyAttackModifier.ProcessDelta();
                 }
 
                 blockDodgeProbability -= dodgeRandomModifier.ProcessDelta();
@@ -341,6 +359,16 @@ public class AIController : MonoBehaviour
             attackDefendProbability += attackAfterOpponentStrikesModifier.ProcessDelta();
         }
 
+        if (isOpponentStunned)
+        {
+            attackDefendProbability += attackIfOpponentStunnedModifier.ProcessDelta();
+        }
+
+        if (incomingHeavyAttackDetected)
+        {
+            attackDefendProbability += attackOnIncomingHeavyAttackModifier.ProcessDelta();
+        }
+
         // Defend Modifiers
 
         if (justFinishedAttacking)
@@ -348,9 +376,14 @@ public class AIController : MonoBehaviour
             attackDefendProbability -= defendAfterAttackModifier.ProcessDelta();
         }
 
-        if (incomingAttackDetected)
+        if (incomingLightAttackDetected)
         {
-            attackDefendProbability -= defendOnIncomingAttackModifier.ProcessDelta();
+            attackDefendProbability -= defendOnIncomingLightAttackModifier.ProcessDelta();
+        }
+
+        if (incomingHeavyAttackDetected)
+        {
+            attackDefendProbability -= defendOnIncomingHeavyAttackModifier.ProcessDelta();
         }
 
         return attackDefendProbability;

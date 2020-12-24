@@ -21,6 +21,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         public CharacterData character;
         public bool isLocalPlayer;
         public bool isAI => !isLocalPlayer;
+        [Range(0, 1)] public float aiDifficulty = 0.5f;
     }
 
     [Serializable]
@@ -74,6 +75,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     public BattleData battleData => GameManager.Instance.battleData;
 
     public bool roundOver = false;
+    public CharacterModel roundWinner = null;
 
     new void Awake()
     {
@@ -130,6 +132,11 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
                 ThirdPersonCamera.Instance.SetTargetObject(characterModel.playerTarget);
             }
 
+            if (characterSelection.isAI)
+            {
+                characterModel.aiController.stats.smartness = characterSelection.aiDifficulty;
+            }
+
             if (downgradeStages.Count > 0)
             {
                 var downgradeStageIndex = battleData.characterStages[i];
@@ -176,17 +183,15 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
         var aliveCharacters = spawnedCharacters.Where((model => model.isAlive)).ToList();
         if (aliveCharacters.Count == 1)
         {
-            var winner = aliveCharacters[0];
-            battleData.roundResults.Add(winner.characterIndex);
-            battleData.characterStages[winner.characterIndex]++;
+            roundWinner = aliveCharacters[0];
 
-            roundEndMessage.text = winner.isLocalPlayer ? "You win!" : "You lose!";
+            roundEndMessage.text = roundWinner.isLocalPlayer ? "You win!" : "You lose!";
             roundEndMessage.text = $"<b>{roundEndMessage.text}</b>";
             roundEndScreen.Show();
 
             roundOver = true;
 
-            this.WaitAndExecute(() => { NextRound(winner); }, roundEndMessageDuration);
+            this.WaitAndExecute(NextRound, roundEndMessageDuration);
         }
         else if (aliveCharacters.Count == 0)
         {
@@ -198,17 +203,20 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
 
             roundOver = true;
 
-            this.WaitAndExecute(() => NextRound(), roundEndMessageDuration);
+            this.WaitAndExecute(NextRound, roundEndMessageDuration);
         }
     }
 
-    void NextRound(CharacterModel winner = null)
+    void NextRound()
     {
-        if (winner)
+        if (roundWinner)
         {
-            if (battleData.characterStages[winner.characterIndex] >= totalDowngradeStages)
+            battleData.roundResults.Add(roundWinner.characterIndex);
+            battleData.characterStages[roundWinner.characterIndex]++;
+
+            if (battleData.characterStages[roundWinner.characterIndex] >= totalDowngradeStages)
             {
-                OnBattleEnded(winner);
+                OnBattleEnded(roundWinner);
                 return;
             }
         }
