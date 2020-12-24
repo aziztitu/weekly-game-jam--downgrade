@@ -8,10 +8,10 @@ public class BackgroundMusic : SingletonMonoBehaviour<BackgroundMusic>
 
     new void Awake()
     {
-        base.Awake();
-
         audioSource = GetComponent<AudioSource>();
+        var clip = audioSource.clip;
 
+        base.Awake();
         if (Instance == this)
         {
             transform.parent = null;
@@ -19,9 +19,9 @@ public class BackgroundMusic : SingletonMonoBehaviour<BackgroundMusic>
         }
         else
         {
-            if (Instance.audioSource.clip != audioSource.clip)
+            if (Instance.audioSource.clip != clip)
             {
-                Instance.PlayMusic(audioSource.clip);
+                Instance.PlayMusic(clip);
             }
 
             audioSource.Stop();
