@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Scene Names")] public string mainMenuScene = "Main Menu";
     public string characterSelectionScene = "Character Selection";
     public string battleSettingsScene = "Battle Settings";
+    public string battleArenaScene = "BattleArena";
 
     public bool hasBattleSettings => _selectedBattleSettings != null;
 
@@ -121,6 +122,8 @@ public class GameManager : MonoBehaviour
             postFadeCallback?.Invoke();
 
             Time.timeScale = 1;
+            HelperUtilities.UpdateCursorLock(false);
+
             SceneManager.LoadScene(sceneName);
         });
     }

@@ -142,22 +142,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 6228316846259877917}
   soundEffects:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: dfd8d24914eed064ea9c7e277a9c1008, type: 3}
+  - {fileID: 8300000, guid: 868c61483235fce4985cd8ee9e1a92a8, type: 3}
+  - {fileID: 8300000, guid: 66b32279b0ae6cd489e3f05fc6961ff8, type: 3}
+  - {fileID: 8300000, guid: 396244e33b5fc3741a7d9aba12a6b9be, type: 3}
+  - {fileID: 8300000, guid: a05fa957593e0094aa95f56b9af1f270, type: 3}
+  - {fileID: 8300000, guid: 953ba2b62b4f2384bb16aa4c86719054, type: 3}
+  - {fileID: 8300000, guid: fecda2553a14b6048a230b5b95f0df55, type: 3}
+  - {fileID: 8300000, guid: f88d8df2552d2c847b3e8bc49067ac9c, type: 3}
+  - {fileID: 8300000, guid: 44a81048fa916c844a51f0aa876acd21, type: 3}
+  - {fileID: 8300000, guid: 7853d51e675510d488ff120648ebbbcb, type: 3}
+  - {fileID: 8300000, guid: e0a466a473013894da9592dabf8e6ee0, type: 3}
+  - {fileID: 8300000, guid: ec98ae81a5a183c41a456b93ae7e30d6, type: 3}
+  - {fileID: 8300000, guid: d28fbf1df1b5eee41afb53d12a753783, type: 3}
+  - {fileID: 8300000, guid: d2a0e4b10a0ade04094b6131d230de66, type: 3}
+  - {fileID: 8300000, guid: 007e561ba48b6a24690a46bf60ca7ed6, type: 3}
+  - {fileID: 8300000, guid: a5d70d69d3f9c0b43a1022411e4badd9, type: 3}
+  - {fileID: 8300000, guid: 0924eefaf130c0a48befb6ccc40b96ab, type: 3}
+  - {fileID: 8300000, guid: 60eccf1e9b2911a409a276ff01eec018, type: 3}
   - {fileID: 8300000, guid: 3da4398c00dfb2b479e05c4502cee663, type: 3}
