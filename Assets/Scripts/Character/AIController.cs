@@ -32,29 +32,39 @@ public class AIController : MonoBehaviour
     {
         public float probability;
         public RangeFloat delta;
+        public float smartnessProbFactor;
+        public float smartnessFactor;
 
-        public CombatModifier(float prob, RangeFloat delta)
+        public CombatModifier(float prob, RangeFloat delta, float smartnessFactor = 0)
         {
             probability = prob;
             this.delta = delta;
+            this.smartnessFactor = smartnessFactor;
         }
 
-        public float ProcessDelta()
+        public float ProcessDelta(float smartnessEffect)
         {
-            return HelperUtilities.TestProbability(probability) ? delta.GetRandom() : 0;
+            return (HelperUtilities.TestProbability(probability + (smartnessProbFactor * smartnessEffect))
+                       ? delta.GetRandom()
+                       : 0) + (smartnessFactor * smartnessEffect);
         }
     }
 
     [Header("Stats")] public AiStats stats;
     public RangeFloat combatRadiusRange = new RangeFloat(5, 8);
     [Range(0, 1)] public float dodgeOutsideCombatProbability = 0.2f;
+    [Range(0, 1)] public float dodgeOutsideCombatSmartnessFactor = 0.2f;
     public SimpleTimer dodgeOutsideCombatTimer = new SimpleTimer();
+    [Range(0, 0.5f)] public float smartnessDeviation = 0.2f;
 
     [Header("Combat")] [Range(0, 1)] public float attackDefendBaseProbability = 0.5f;
 
     [Range(0, 1)] public float comboContinueProbability = 0.9f;
+    [Range(0, 1)] public float comboContinueSmartnessFactor = 0.1f;
     public RangeInt opponentParrySpamThreshold = new RangeInt(4, 8);
     public SimpleTimer combatActionTimer = new SimpleTimer();
+    public float combatActionTimerSmartnessFactor = 0.5f;
+
     public SimpleTimer blockTimer = new SimpleTimer();
     public SimpleTimer dodgeTimer = new SimpleTimer();
     public SimpleTimer postAttackTimer = new SimpleTimer();
@@ -124,9 +134,16 @@ public class AIController : MonoBehaviour
     private bool opponentAttackJustEnded => !postOpponentAttackTimer.expired;
     private bool isOpponentStunned => targetCharacter.characterMeleeController.isInHitState;
 
+    private float smartnessEffect => HelperUtilities.Remap(curSmartness, 0, 1, -1f, 1f);
+
+    private float curSmartness = 0;
+    private RangeFloat originalCombatActionDurationRange;
+
     void Awake()
     {
         characterModel = GetComponent<CharacterModel>();
+
+        originalCombatActionDurationRange = new RangeFloat(combatActionTimer.durationRange.min, combatActionTimer.durationRange.max);
     }
 
     // Start is called before the first frame update
@@ -144,15 +161,16 @@ public class AIController : MonoBehaviour
 
         characterModel.characterAnimEventHandler.onComboContinueCheckStarted += () =>
         {
-            // TODO: Make use of stats
-
-            continueCombo = TestProbability(comboContinueProbability);
+            continueCombo =
+                TestProbability(comboContinueProbability + (comboContinueSmartnessFactor * smartnessEffect));
         };
 
         characterModel.onInitialized += () =>
         {
             targetCharacter.characterAnimEventHandler.onMeleeAttackSequenceEnded +=
                 () => { postOpponentAttackTimer.Reset(); };
+
+            CalculateCurSmartness();
         };
     }
 
@@ -184,6 +202,7 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         timeSinceLastUpdateMoveTarget += Time.deltaTime;
         if (timeSinceLastUpdateMoveTarget >= updateMoveTargetInterval)
         {
@@ -213,8 +232,8 @@ public class AIController : MonoBehaviour
                 var toMoveTarget = moveTarget.Value - transform.position;
                 if (toMoveTarget.magnitude > stopDistance)
                 {
-                    // TODO: Make use of stats to decide dodge
-                    if (dodgeOutsideCombatTimer.expired && TestProbability(dodgeOutsideCombatProbability))
+                    if (dodgeOutsideCombatTimer.expired && TestProbability(
+                            dodgeOutsideCombatProbability + (dodgeOutsideCombatSmartnessFactor * smartnessEffect)))
                     {
                         newInput.Move = new Vector3(0, 0, 1);
                         newInput.Dodge = true;
@@ -240,6 +259,14 @@ public class AIController : MonoBehaviour
         characterModel.characterInput = newInput;
     }
 
+    void CalculateCurSmartness()
+    {
+        curSmartness = Mathf.Clamp01(stats.smartness + Random.Range(-smartnessDeviation, smartnessDeviation));
+
+        combatActionTimer.durationRange.min = originalCombatActionDurationRange.min + combatActionTimerSmartnessFactor * smartnessEffect;
+        combatActionTimer.durationRange.max = originalCombatActionDurationRange.max + combatActionTimerSmartnessFactor * smartnessEffect;
+    }
+
     void PerformCombat(CharacterModel.CharacterInput newInput)
     {
         if (characterMeleeController.isAttackSequenceActive)
@@ -255,14 +282,15 @@ public class AIController : MonoBehaviour
 
             combatActionTimer.Reset();
         }
-        else if (characterModel.characterMeleeController.isShielding && !blockTimer.expired)
-        {
-            newInput.IsBlocking = true;
-            combatActionTimer.Reset();
-        }
         else if (characterModel.characterMovementController.isDodging && !dodgeTimer.expired)
         {
             // No Action Required
+        }
+        else if (characterModel.characterMeleeController.isShielding && !blockTimer.expired &&
+                 !incomingHeavyAttackDetected)
+        {
+            newInput.IsBlocking = true;
+            combatActionTimer.Reset();
         }
         else if (combatActionTimer.expired || incomingAttackDetected)
         {
@@ -274,17 +302,17 @@ public class AIController : MonoBehaviour
 
                 if (incomingHeavyAttackDetected)
                 {
-                    lightHeavyProbability += lightOnIncomingHeavyAttackModifier.ProcessDelta();
+                    lightHeavyProbability += lightOnIncomingHeavyAttackModifier.ProcessDelta(smartnessEffect);
                 }
 
                 if (opponentIsShielding)
                 {
-                    lightHeavyProbability -= heavyIfOppenentShieldsModifier.ProcessDelta();
+                    lightHeavyProbability -= heavyIfOppenentShieldsModifier.ProcessDelta(smartnessEffect);
                 }
 
                 if (opponentIsSpammingParry)
                 {
-                    lightHeavyProbability -= heavyIfOppenentParrySpamModifier.ProcessDelta();
+                    lightHeavyProbability -= heavyIfOppenentParrySpamModifier.ProcessDelta(smartnessEffect);
                 }
 
                 if (TestProbability(lightHeavyProbability))
@@ -303,20 +331,23 @@ public class AIController : MonoBehaviour
 
                 if (justFinishedAttacking)
                 {
-                    blockDodgeProbability += blockAfterAttackModifier.ProcessDelta();
+                    blockDodgeProbability += blockAfterAttackModifier.ProcessDelta(
+                        !characterModel.characterMeleeController.isInHitState
+                            ? smartnessEffect
+                            : 0);
                 }
 
                 if (incomingAttackDetected)
                 {
-                    blockDodgeProbability += blockOnIncomingAttackModifier.ProcessDelta();
+                    blockDodgeProbability += blockOnIncomingAttackModifier.ProcessDelta(smartnessEffect);
                 }
 
                 if (incomingHeavyAttackDetected)
                 {
-                    blockDodgeProbability -= dodgeOnIncomingHeavyAttackModifier.ProcessDelta();
+                    blockDodgeProbability -= dodgeOnIncomingHeavyAttackModifier.ProcessDelta(smartnessEffect);
                 }
 
-                blockDodgeProbability -= dodgeRandomModifier.ProcessDelta();
+                blockDodgeProbability -= dodgeRandomModifier.ProcessDelta(smartnessEffect);
 
                 if (TestProbability(blockDodgeProbability))
                 {
@@ -345,45 +376,51 @@ public class AIController : MonoBehaviour
 
     float ProcessAttackDefendProbability()
     {
-        var attackDefendProbability = 0.5f;
+        var attackDefendProbability = 0.4f + (smartnessEffect * 0.15f);
 
         // Attack Modifiers
 
         if (justDodged)
         {
-            attackDefendProbability += attackAfterDodgeModifier.ProcessDelta();
+            attackDefendProbability += attackAfterDodgeModifier.ProcessDelta(smartnessEffect);
         }
 
         if (opponentAttackJustEnded)
         {
-            attackDefendProbability += attackAfterOpponentStrikesModifier.ProcessDelta();
+            attackDefendProbability +=
+                attackAfterOpponentStrikesModifier.ProcessDelta(characterModel.characterMeleeController.isInHitState
+                    ? smartnessEffect
+                    : 0);
         }
 
         if (isOpponentStunned)
         {
-            attackDefendProbability += attackIfOpponentStunnedModifier.ProcessDelta();
+            attackDefendProbability += attackIfOpponentStunnedModifier.ProcessDelta(smartnessEffect);
         }
 
-        if (incomingHeavyAttackDetected)
+        if (incomingHeavyAttackDetected && curSmartness > 0.75)
         {
-            attackDefendProbability += attackOnIncomingHeavyAttackModifier.ProcessDelta();
+            attackDefendProbability += attackOnIncomingHeavyAttackModifier.ProcessDelta(smartnessEffect);
         }
 
         // Defend Modifiers
 
         if (justFinishedAttacking)
         {
-            attackDefendProbability -= defendAfterAttackModifier.ProcessDelta();
+            attackDefendProbability -= defendAfterAttackModifier.ProcessDelta(
+                !characterModel.characterMeleeController.isInHitState
+                    ? smartnessEffect
+                    : 0);
         }
 
         if (incomingLightAttackDetected)
         {
-            attackDefendProbability -= defendOnIncomingLightAttackModifier.ProcessDelta();
+            attackDefendProbability -= defendOnIncomingLightAttackModifier.ProcessDelta(smartnessEffect);
         }
 
         if (incomingHeavyAttackDetected)
         {
-            attackDefendProbability -= defendOnIncomingHeavyAttackModifier.ProcessDelta();
+            attackDefendProbability -= defendOnIncomingHeavyAttackModifier.ProcessDelta(smartnessEffect);
         }
 
         return attackDefendProbability;

@@ -43,7 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc905ccb72a3f28499ccc8e9b8180395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characters: []
+  characters:
+  - {fileID: 11400000, guid: dc4662f68db712243bccae8368c34200, type: 2}
   mainMenuScene: MainMenu
   characterSelectionScene: Character Selection
   battleSettingsScene: Battle Settings

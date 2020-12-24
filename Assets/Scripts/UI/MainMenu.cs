@@ -22,7 +22,7 @@ public class MainMenu : MonoBehaviour
         
     }
 
-    public void PlaySinglePlayer(float difficulty = 0.5f)
+    public void PlaySinglePlayer(float difficulty)
     {
         GameManager.Instance.SelectedBattleSettings = new BattleManager.BattleSettings()
         {

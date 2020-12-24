@@ -194,6 +194,7 @@ MonoBehaviour:
   characterSelectionData:
     character: {fileID: 0}
     isLocalPlayer: 0
+    aiDifficulty: 0.5
   characterIndex: 0
   lockedOnTarget: {fileID: 0}
   playerTarget: {fileID: 4468325815373265918}
@@ -447,22 +448,26 @@ MonoBehaviour:
   combatRadiusRange:
     min: 1
     max: 4
-  dodgeOutsideCombatProbability: 0.05
+  dodgeOutsideCombatProbability: 0.1
+  dodgeOutsideCombatSmartnessFactor: 0.1
   dodgeOutsideCombatTimer:
     durationRange:
       min: 3
       max: 4
     _elapsedTime: 0
+  smartnessDeviation: 0.2
   attackDefendBaseProbability: 0.5
   comboContinueProbability: 0.9
+  comboContinueSmartnessFactor: 0.1
   opponentParrySpamThreshold:
     min: 4
     max: 8
   combatActionTimer:
     durationRange:
-      min: 0.1
-      max: 0.3
+      min: 0.4
+      max: 0.6
     _elapsedTime: 0
+  combatActionTimerSmartnessFactor: -0.3
   blockTimer:
     durationRange:
       min: 0.3
@@ -489,75 +494,103 @@ MonoBehaviour:
     delta:
       min: 0.1
       max: 0.2
+    smartnessProbFactor: 0
+    smartnessFactor: 0
   attackAfterOpponentStrikesModifier:
     probability: 0.6
     delta:
       min: 0.1
       max: 0.2
+    smartnessProbFactor: 0
+    smartnessFactor: -0.1
   attackIfOpponentStunnedModifier:
     probability: 0.9
     delta:
       min: 0.2
       max: 0.4
+    smartnessProbFactor: 0.5
+    smartnessFactor: 0.1
   attackOnIncomingHeavyAttackModifier:
     probability: 0.65
     delta:
       min: 0
       max: 0.2
+    smartnessProbFactor: 0.25
+    smartnessFactor: 0.1
   lightHeavyBaseProbability: 0.8
   heavyIfOppenentShieldsModifier:
     probability: 0.8
     delta:
       min: 0.2
       max: 0.4
+    smartnessProbFactor: 0.1
+    smartnessFactor: 0.1
   heavyIfOppenentParrySpamModifier:
     probability: 0.9
     delta:
       min: 0.3
       max: 0.6
+    smartnessProbFactor: 0.05
+    smartnessFactor: 0.2
   lightOnIncomingHeavyAttackModifier:
     probability: 0.9
     delta:
       min: 0
       max: 0.2
+    smartnessProbFactor: 0.05
+    smartnessFactor: 0.1
   defendAfterAttackModifier:
     probability: 0.5
     delta:
       min: 0
       max: 0.1
+    smartnessProbFactor: 0.2
+    smartnessFactor: 0.1
   defendOnIncomingLightAttackModifier:
     probability: 0.2
     delta:
       min: 0
       max: 0.1
+    smartnessProbFactor: 0.3
+    smartnessFactor: 0.2
   defendOnIncomingHeavyAttackModifier:
     probability: 0.1
     delta:
       min: 0
       max: 0.05
+    smartnessProbFactor: 0
+    smartnessFactor: 0
   blockDodgeBaseProbability: 0.9
   blockAfterAttackModifier:
     probability: 0.7
     delta:
       min: 0
       max: 0.2
+    smartnessProbFactor: 0
+    smartnessFactor: -0.15
   blockOnIncomingAttackModifier:
     probability: 0.8
     delta:
       min: 0.1
       max: 0.2
+    smartnessProbFactor: 0
+    smartnessFactor: 0
   parryOnIncomingAttackProbability: 0.3
   dodgeOnIncomingHeavyAttackModifier:
     probability: 0.9
     delta:
       min: 0.2
       max: 0.5
+    smartnessProbFactor: 0.05
+    smartnessFactor: 0.2
   justDodgedWindow: 0.5
   dodgeRandomModifier:
     probability: 0.3
     delta:
       min: 0
       max: 0.2
+    smartnessProbFactor: 0
+    smartnessFactor: 0
   curAggression: 0.5
   moveTargetDist: 15
   moveTargetDistIsMax: 1
