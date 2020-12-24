@@ -112,6 +112,7 @@ public class CameraFollow : MonoBehaviour
                 {
                     transform.SetParent(targetFollow);
                     transform.localPosition = Vector3.zero;
+                    transform.localRotation = Quaternion.identity;
                     targetFollow = null;
 
                     OnSwitchingEnded?.Invoke();
