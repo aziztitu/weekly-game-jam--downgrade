@@ -53,6 +53,11 @@ public class CharacterAnimEventHandler : MonoBehaviour
 
     public void MeleeAttackSequenceEnd()
     {
+        /*if (owner.characterMeleeController.isAttackSequenceActive)
+        {
+            owner.characterAnimEventHandler.MeleeAttackEnd();
+        }*/
+
         Debug.Log("Melee Attack Sequence Ended");
         checkingComboContinue = false;
         onMeleeAttackSequenceEnded?.Invoke();

@@ -77,11 +77,6 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
 
         if (isExit)
         {
-            if (charModel.characterMeleeController.isAttackSequenceActive)
-            {
-                charModel.characterAnimEventHandler.MeleeAttackEnd();
-            }
-
             charModel.characterAnimEventHandler.MeleeAttackSequenceEnd();
         }
     }

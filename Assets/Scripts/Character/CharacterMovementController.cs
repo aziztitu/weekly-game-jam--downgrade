@@ -87,6 +87,12 @@ public class CharacterMovementController : MonoBehaviour
         originalAvatarPosition = characterModel.avatar.localPosition;
         timeSinceDodgeStart = dodgeDuration * 2;
         timeSinceDashStart = 10;
+
+        characterModel.health.OnDamageTaken.AddListener(() =>
+        {
+            isDashing = false;
+            isDodging = false;
+        });
     }
 
     public void OnDrawGizmos()
@@ -129,7 +135,8 @@ public class CharacterMovementController : MonoBehaviour
 
         m_PreviouslyGrounded = m_CharacterController.isGrounded;
 
-        if (characterModel.characterMeleeController.isAttackSequenceActive)
+        if (characterModel.characterMeleeController.isAttackSequenceActive ||
+            characterModel.characterMeleeController.isInHitState)
         {
             return;
         }
@@ -195,7 +202,12 @@ public class CharacterMovementController : MonoBehaviour
         }
         else
         {
-            if (!characterModel.characterMeleeController.isAttackSequenceActive)
+            if (characterModel.characterMeleeController.isAttackSequenceActive ||
+                characterModel.characterMeleeController.isInHitState)
+            {
+                Move(0);
+            }
+            else
             {
                 GetInput(out var speed);
 
@@ -211,10 +223,6 @@ public class CharacterMovementController : MonoBehaviour
                 }
 
                 ProgressStepCycle(speed);
-            }
-            else
-            {
-                Move(0);
             }
 
             avatarPositionLerpValue = HelperUtilities.Remap(timeSinceDodgeStart, dodgeDuration,
@@ -368,9 +376,12 @@ public class CharacterMovementController : MonoBehaviour
             desiredMove.Normalize();
         }
 
-        if (desiredMove.magnitude > 0 || (characterModel.characterMeleeController.attemptingToShield &&
-                                          characterModel.characterMeleeController.shieldTimer.elapsedTime <
-                                          shieldTurnWindow))
+        bool justDodged = !isDodging && timeSinceDodgeStart >= dodgeDuration &&
+                          timeSinceDodgeStart < dodgeDuration * 2;
+        if (desiredMove.magnitude > 0 || justDodged || (characterModel.characterMeleeController.attemptingToShield &&
+                                                        characterModel.characterMeleeController.shieldTimer
+                                                            .elapsedTime <
+                                                        shieldTurnWindow))
         {
             TurnTowardsLockedTarget();
         }

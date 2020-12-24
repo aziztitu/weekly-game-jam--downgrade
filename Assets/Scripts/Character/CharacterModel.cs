@@ -120,6 +120,8 @@ public class CharacterModel : MonoBehaviour
         {
             health.UpdateHealth(healthRegenerationSpeed * Time.deltaTime);
         }*/
+
+        animator.SetBool("IsAlive", isAlive);
     }
 
     public void OnInitialized()
