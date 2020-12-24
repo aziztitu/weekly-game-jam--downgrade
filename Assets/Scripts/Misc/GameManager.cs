@@ -119,6 +119,8 @@ public class GameManager : MonoBehaviour
         ScreenFader.Instance.FadeOut(-1, () =>
         {
             postFadeCallback?.Invoke();
+
+            Time.timeScale = 1;
             SceneManager.LoadScene(sceneName);
         });
     }

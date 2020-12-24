@@ -152,17 +152,20 @@ public class MeleeTest : MonoBehaviour
             {
                 anim.SetInteger("AttackMode", characterModel.characterInput.LightAttack ? 0 : 1);
 
+                var selectedWoosh = $"Woosh{Random.Range(1,6)}";
                 if (isAttackSequenceActive)
                 {
                     if (characterModel.characterAnimEventHandler.checkingComboContinue)
                     {
                         comboContinued = true;
                         anim.SetTrigger("ContinueCombo");
+                        SoundEffectsManager.Instance.Play(selectedWoosh);
                     }
                 }
                 else
                 {
                     anim.SetTrigger("Attack");
+                    SoundEffectsManager.Instance.Play(selectedWoosh);
                 }
             }
         }
@@ -212,6 +215,7 @@ public class MeleeTest : MonoBehaviour
     public void Parry(CharacterModel attacker)
     {
         anim.SetTrigger("Parry");
+        SoundEffectsManager.Instance.Play("ParryShieldClink");
         attacker.characterMeleeController.OnParried();
     }
 
@@ -312,6 +316,7 @@ public class MeleeTest : MonoBehaviour
             if (isShielding && CanBlock(attacker.transform.position))
             {
                 anim.SetTrigger("ShieldImpact");
+                SoundEffectsManager.Instance.Play("ShieldClinking");
                 return false;
             }
         }

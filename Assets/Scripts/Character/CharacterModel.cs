@@ -87,6 +87,7 @@ public class CharacterModel : MonoBehaviour
             if (health.currentHealth > 0)
             {
                 animator.SetTrigger("Hit");
+                SoundEffectsManager.Instance.Play($"HurtGrunt{Random.Range(1, 5)}");
 
                 if (isLocalPlayer && !isShakingCam)
                 {
@@ -106,6 +107,9 @@ public class CharacterModel : MonoBehaviour
             animator.applyRootMotion = true;
             var deathMode = (Random.Range(0, 10) >= 5) ? 1 : 2;
             animator.SetTrigger($"Death{deathMode}");
+
+            var deathSoundKey = deathMode == 1 ? "BackwardsDeath" : "ForwardDeath";
+            SoundEffectsManager.Instance.Play(deathSoundKey);
         });
     }
 

@@ -51,6 +51,8 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
 
         HelperUtilities.UpdateCursorLock(true);
+
+        SoundEffectsManager.Instance.Play("PaperRustling");
     }
 
     void PauseGame()
@@ -60,6 +62,8 @@ public class PauseMenu : MonoBehaviour
 
         pauseMenu.SetActive(true);
         HelperUtilities.UpdateCursorLock(false);
+
+        SoundEffectsManager.Instance.Play("PaperRustling");
     }
 
     [UsedImplicitly]

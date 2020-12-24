@@ -82,6 +82,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             GameManager.Instance.battleData.Initialize(numCharacters);
         }
 
+        Time.timeScale = 1;
         HelperUtilities.UpdateCursorLock(true);
     }
 
@@ -89,6 +90,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     void Start()
     {
         SpawnCharacters();
+
+        SoundEffectsManager.Instance.Play("Gong");
     }
 
     // Update is called once per frame

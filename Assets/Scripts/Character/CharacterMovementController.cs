@@ -159,6 +159,8 @@ public class CharacterMovementController : MonoBehaviour
             characterModel.animator.SetFloat("DodgeX", localDodgeDir.x);
             characterModel.animator.SetFloat("DodgeY", localDodgeDir.z);
             characterModel.animator.SetTrigger("Dodge");
+
+            SoundEffectsManager.Instance.Play("DodgeRoll");
         }
     }
 
