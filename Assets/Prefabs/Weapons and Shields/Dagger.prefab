@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponId: 2
-  damage: 10
+  damage: 5
 --- !u!54 &3990019229269454635
 Rigidbody:
   m_ObjectHideFlags: 0

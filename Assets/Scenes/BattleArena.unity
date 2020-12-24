@@ -574,6 +574,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8063944978479278008, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -8633933032024995564, guid: 8dbda874e87e0c64cb5066583862b6f0, type: 2}
+    - target: {fileID: 8063944978479278008, guid: 2d995523805293146afcbf25a23ba782, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8181862846376423887, guid: 2d995523805293146afcbf25a23ba782, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

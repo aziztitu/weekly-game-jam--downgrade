@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class BattleManager : SingletonMonoBehaviour<BattleManager>
@@ -39,7 +40,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             {
                 characterStages.Add(0);
             }
-            
+
             expired = false;
         }
     }
@@ -54,9 +55,16 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     [Header("Settings")] public List<DowngradeStage> downgradeStages;
     public BattleSettings battleSettings;
 
-    [Header("References")]
-    public List<Transform> characterSpawnPoints;
+    [Header("References")] public List<Transform> characterSpawnPoints;
     private Randomizer<Transform> characterSpawnRandomizer;
+
+    [Header("Ending")]
+    public MenuPage roundEndScreen;
+    public TextMeshProUGUI roundEndMessage;
+    public float roundEndMessageDuration = 2f;
+
+    public MenuPage battleEndScreen;
+    public TextMeshProUGUI battleEndMessage;
 
     [HideInInspector] public List<CharacterModel> spawnedCharacters = new List<CharacterModel>();
 
@@ -64,6 +72,8 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
     public int totalDowngradeStages => downgradeStages.Count;
 
     public BattleData battleData => GameManager.Instance.battleData;
+
+    public bool roundOver = false;
 
     new void Awake()
     {
@@ -106,8 +116,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             var characterSelection = battleSettings.characterSelections[i];
 
             var spawnPoint = characterSpawnRandomizer.GetRandomItem();
-            var characterModel = Instantiate(characterSelection.character.prefab, spawnPoint.position, spawnPoint.rotation)
-                .GetComponent<CharacterModel>();
+            var characterModel =
+                Instantiate(characterSelection.character.prefab, spawnPoint.position, spawnPoint.rotation)
+                    .GetComponent<CharacterModel>();
 
             characterModel.playerInputController.enabled = characterSelection.isLocalPlayer;
             characterModel.aiController.enabled = characterSelection.isAI;
@@ -135,11 +146,9 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             {
                 Debug.LogError("Please provide the Downgrade Stages in Battle Manager");
             }
-            
-            characterModel.health.OnHealthDepleted.AddListener(() =>
-            {
-                OnCharacterDied(characterModel.characterIndex);
-            });
+
+            characterModel.health.OnHealthDepleted.AddListener(
+                () => { OnCharacterDied(characterModel.characterIndex); });
 
             if (HUD.Instance.playerStatsList.Count > i)
             {
@@ -171,25 +180,61 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             battleData.roundResults.Add(winner.characterIndex);
             battleData.characterStages[winner.characterIndex]++;
 
-            // TODO: Display "Player Won/Lost the round" Message
+            roundEndMessage.text = winner.isLocalPlayer ? "You won the round" : "You lost the round";
+            roundEndMessage.text = $"<b>{roundEndMessage.text}</b>";
+            roundEndScreen.Show();
 
-            NextRound();
-        } 
+            roundOver = true;
+
+            this.WaitAndExecute(() => { NextRound(winner); }, roundEndMessageDuration);
+        }
         else if (aliveCharacters.Count == 0)
         {
             battleData.roundResults.Add(-1);
 
-            // TODO: Round Tied
+            roundEndMessage.text = "Tied";
+            roundEndMessage.text = $"<b>{roundEndMessage.text}</b>";
+            roundEndScreen.Show();
 
-            NextRound();
+            roundOver = true;
+
+            this.WaitAndExecute(() => NextRound(), roundEndMessageDuration);
         }
     }
 
-    void NextRound()
+    void NextRound(CharacterModel winner = null)
     {
-        GameManager.Instance.RestartCurrentScene(() =>
+        if (winner)
         {
-            battleData.currentRound++;
-        });
+            if (battleData.characterStages[winner.characterIndex] >= totalDowngradeStages)
+            {
+                OnBattleEnded(winner);
+                return;
+            }
+        }
+        GameManager.Instance.RestartCurrentScene(() => { battleData.currentRound++; });
+    }
+
+    void OnBattleEnded(CharacterModel winner)
+    {
+        roundEndScreen.Hide();
+
+        winner.PlayVictoryTaunt();
+
+        battleEndMessage.text = winner.isLocalPlayer ? "You live to fight another day!" : "So long, fallen warrior!";
+        battleEndMessage.text = $"<b>{battleEndMessage.text}</b>";
+        battleEndScreen.Show();
+
+        HelperUtilities.UpdateCursorLock(false);
+    }
+
+    public void GoToMainMenu()
+    {
+        GameManager.Instance.GoToMainMenu();
+    }
+
+    public void Restart()
+    {
+        GameManager.Instance.RestartCurrentScene();
     }
 }

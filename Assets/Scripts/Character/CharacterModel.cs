@@ -153,4 +153,9 @@ public class CharacterModel : MonoBehaviour
     {
         this.onInitialized?.Invoke();
     }
+
+    public void PlayVictoryTaunt()
+    {
+
+    }
 }

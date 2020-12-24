@@ -11,6 +11,8 @@ public class PauseMenu : MonoBehaviour
 
     private bool paused;
 
+    public bool canPause => !BattleManager.Instance.roundOver;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -57,6 +59,11 @@ public class PauseMenu : MonoBehaviour
 
     void PauseGame()
     {
+        if (!canPause)
+        {
+            return;
+        }
+
         paused = true;
         Time.timeScale = 0f;
 

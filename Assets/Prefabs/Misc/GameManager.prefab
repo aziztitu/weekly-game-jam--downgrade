@@ -44,6 +44,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characters: []
-  mainMenuScene: Main Menu
+  mainMenuScene: MainMenu
   characterSelectionScene: Character Selection
   battleSettingsScene: Battle Settings
+  battleArenaScene: BattleArena
+  battleData:
+    expired: 1
+    currentRound: 0
+    roundResults: 
+    characterStages: 
