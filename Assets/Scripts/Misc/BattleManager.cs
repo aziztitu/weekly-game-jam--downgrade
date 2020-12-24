@@ -180,7 +180,7 @@ public class BattleManager : SingletonMonoBehaviour<BattleManager>
             battleData.roundResults.Add(winner.characterIndex);
             battleData.characterStages[winner.characterIndex]++;
 
-            roundEndMessage.text = winner.isLocalPlayer ? "You won the round" : "You lost the round";
+            roundEndMessage.text = winner.isLocalPlayer ? "You won the round!" : "You lost the round!";
             roundEndMessage.text = $"<b>{roundEndMessage.text}</b>";
             roundEndScreen.Show();
 
