@@ -43,6 +43,8 @@ public class CharacterModel : MonoBehaviour
     // public float delayBeforeHealthRegeneration = 3f;
     // public float healthRegenerationSpeed = 1f;
     public Transform playerTarget;
+    public float playerTargetRotationSpeed = 10f;
+
     public Transform avatar;
     public Transform avatarModel
     {
@@ -119,7 +121,26 @@ public class CharacterModel : MonoBehaviour
             health.timeSinceLastDamage > delayBeforeHealthRegeneration)
         {
             health.UpdateHealth(healthRegenerationSpeed * Time.deltaTime);
-        }*/
+        }
+        */
+
+        var toTarget = lockedOnTargetPos - transform.position;
+        toTarget.y = 0;
+
+        // playerTarget.localRotation = Quaternion.Slerp(playerTarget.localRotation, Quaternion.LookRotation(toTarget, Vector3.up), Time.deltaTime);
+
+        var targetLookAt = lockedOnTargetPos;
+        targetLookAt.y = 0;
+
+        var originalRot = playerTarget.localRotation;
+        playerTarget.LookAt(targetLookAt);
+
+        var newAngles = playerTarget.localRotation.eulerAngles;
+        newAngles.x = originalRot.eulerAngles.x;
+
+        var targetRotation = Quaternion.Euler(newAngles);
+
+        playerTarget.localRotation = Quaternion.Slerp(originalRot, targetRotation, playerTargetRotationSpeed * Time.deltaTime);
 
         animator.SetBool("IsAlive", isAlive);
     }
