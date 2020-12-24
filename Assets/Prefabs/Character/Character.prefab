@@ -143,7 +143,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2.5
-  m_Radius: 0.8
+  m_Radius: 0.6
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -231,9 +231,16 @@ MonoBehaviour:
   continuousParryThreshold: 1
   hitTimer:
     durationRange:
-      min: 1
-      max: 1
+      min: 1.5
+      max: 1.5
     _elapsedTime: 0
+  stunnedTimer:
+    durationRange:
+      min: 1.5
+      max: 1.5
+    _elapsedTime: 0
+  parriedEffectSpeed: 6
+  parriedEffectDuration: 1
   defaultDashSpeed: 8
   attackerPosition: {x: -0.58, y: 1.35, z: 1.29}
   _btnTryShield: 0
@@ -477,7 +484,7 @@ MonoBehaviour:
     delta:
       min: 0
       max: 0.1
-  blockDodgeBaseProbability: 0.7
+  blockDodgeBaseProbability: 0.9
   blockAfterAttackModifier:
     probability: 0.5
     delta:
@@ -488,13 +495,13 @@ MonoBehaviour:
     delta:
       min: 0
       max: 0.1
-  parryOnIncomingAttackProbability: 0.1
+  parryOnIncomingAttackProbability: 0.04
   justDodgedWindow: 0.5
   dodgeRandomModifier:
     probability: 0.1
     delta:
       min: 0
-      max: 0.2
+      max: 0.1
   curAggression: 0.5
   moveTargetDist: 15
   moveTargetDistIsMax: 1

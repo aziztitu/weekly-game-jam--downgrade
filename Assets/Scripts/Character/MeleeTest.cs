@@ -21,6 +21,9 @@ public class MeleeTest : MonoBehaviour
     public SimpleTimer parryTimer = new SimpleTimer(1);
     public float continuousParryThreshold = 1;
     public SimpleTimer hitTimer = new SimpleTimer(1);
+    public SimpleTimer stunnedTimer = new SimpleTimer(1.5f);
+    public float parriedEffectSpeed = 3;
+    public float parriedEffectDuration = 0.4f;
 
     [Header("Dash")] public float defaultDashSpeed;
 
@@ -73,7 +76,6 @@ public class MeleeTest : MonoBehaviour
             {
                 this.isAttackSequenceActive = false;
                 UpdateWeaponCollider(false);
-                characterModel.characterMovementController.StopDashing();
             };
 
         characterModel.characterAnimEventHandler.onMeleeAttackStarted += (int comboIndex, float damageMultiplier) =>
@@ -129,6 +131,8 @@ public class MeleeTest : MonoBehaviour
         hitTimer.Update();
         shieldTimer.Update();
         parryTimer.Update();
+        stunnedTimer.Update();
+
         if (parryTimer.expired && parryTimer.timeSinceExpiry > continuousParryThreshold)
         {
             continuousParryAttempts = 0;
@@ -174,6 +178,7 @@ public class MeleeTest : MonoBehaviour
                 }
             }
         }
+
         if (currentShield)
         {
             anim.SetBool("IsShielding", isShielding);
@@ -210,6 +215,12 @@ public class MeleeTest : MonoBehaviour
     public void OnParried()
     {
         anim.SetTrigger("ParryStunned");
+        stunnedTimer.Reset();
+        var toTarget = characterModel.lockedOnTargetPos - transform.position;
+        toTarget.y = 0;
+
+        /*characterModel.characterMovementController.DashTowards(transform.position - toTarget, parriedEffectSpeed,
+            parriedEffectDuration);*/
     }
 
     public void SpawnWeapon(GameObject weaponPrefab)
@@ -298,6 +309,7 @@ public class MeleeTest : MonoBehaviour
 
             if (isShielding && CanBlock(attacker.transform.position))
             {
+                anim.SetTrigger("ShieldImpact");
                 return false;
             }
         }

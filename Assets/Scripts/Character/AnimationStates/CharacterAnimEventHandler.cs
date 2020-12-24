@@ -51,7 +51,7 @@ public class CharacterAnimEventHandler : MonoBehaviour
         onMeleeAttackSequenceStarted?.Invoke();
     }
 
-    public void MeleeAttackSequenceEnd()
+    public void MeleeAttackSequenceEnd(bool stopDashing = true)
     {
         /*if (owner.characterMeleeController.isAttackSequenceActive)
         {
@@ -63,6 +63,11 @@ public class CharacterAnimEventHandler : MonoBehaviour
         onMeleeAttackSequenceEnded?.Invoke();
 
         animator.ResetTrigger("Attack");
+
+        if (stopDashing)
+        {
+            owner.characterMovementController.StopDashing();
+        }
     }
 
     public void MeleeAttackStart(AnimationEvent animationEvent)

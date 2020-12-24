@@ -9,6 +9,7 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
     public bool isExit = false;
 
     public bool applyRootMotion = false;
+    public bool stopDashingOnExit = true;
 
     [Header("Avatar Position Offset")] public Vector3 avatarPositionOffset;
     public float positionTweenDuration;
@@ -77,7 +78,7 @@ public class MeleeAttackSequenceState : StateMachineBehaviour
 
         if (isExit)
         {
-            charModel.characterAnimEventHandler.MeleeAttackSequenceEnd();
+            charModel.characterAnimEventHandler.MeleeAttackSequenceEnd(stopDashingOnExit);
         }
     }
 

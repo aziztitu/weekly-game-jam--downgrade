@@ -90,7 +90,7 @@ public class CharacterMovementController : MonoBehaviour
 
         characterModel.health.OnDamageTaken.AddListener(() =>
         {
-            isDashing = false;
+            // isDashing = false;
             isDodging = false;
         });
     }
