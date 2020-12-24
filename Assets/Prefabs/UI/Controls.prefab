@@ -204,15 +204,15 @@ MonoBehaviour:
 
     ~Left stick to move.
 
-    ~Right
-    stick to look around.
-
-    ~X for light attacks.
+    ~X for
+    light attacks.
 
     ~Y for heavy attacks.
 
+    ~R Bumper to shield or parry.
+
     ~B
-    to shield or parry.'
+    to dodge roll.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4d7af9b719cdc024da880c2d03fa5b6d, type: 2}
   m_sharedMaterial: {fileID: -8633933032024995564, guid: 4d7af9b719cdc024da880c2d03fa5b6d, type: 2}
@@ -685,15 +685,15 @@ MonoBehaviour:
 
     ~WASD to move.
 
-    ~Mouse to
-    look around.
+    ~LMB for light
+    attacks.
 
-    ~Left Mouse for light attacks.
+    ~L Shift+LMB for heavy attacks.
 
-    ~Left Shift + Left Mouse
-    for heavy attacks.
+    ~RMB to shield or parry.
 
-    ~Right Mouse to shield or parry.'
+    ~Space
+    to dodge roll.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4d7af9b719cdc024da880c2d03fa5b6d, type: 2}
   m_sharedMaterial: {fileID: -8633933032024995564, guid: 4d7af9b719cdc024da880c2d03fa5b6d, type: 2}
@@ -832,15 +832,15 @@ MonoBehaviour:
 
     ~Left stick to move.
 
-    ~Right stick
-    to look around.
-
-    ~Square for light attacks.
+    ~Square
+    for light attacks.
 
     ~Triangle for heavy attacks.
 
+    ~R1 to shield or parry.
+
     ~Circle
-    to shield or parry.'
+    to dodge roll.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4d7af9b719cdc024da880c2d03fa5b6d, type: 2}
   m_sharedMaterial: {fileID: -8633933032024995564, guid: 4d7af9b719cdc024da880c2d03fa5b6d, type: 2}
