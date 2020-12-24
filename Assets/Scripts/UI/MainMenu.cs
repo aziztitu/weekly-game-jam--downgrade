@@ -24,6 +24,7 @@ public class MainMenu : MonoBehaviour
 
     public void PlaySinglePlayer()
     {
+        GameManager.Instance.battleData = new BattleManager.BattleData();
         GameManager.Instance.GoToScene(GameManager.Instance.battleArenaScene);
     }
 

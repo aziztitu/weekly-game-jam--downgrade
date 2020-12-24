@@ -16,6 +16,12 @@ public class PlayerInputController : MonoBehaviour
 
     public void UpdatePlayerInput()
     {
+        if (Time.timeScale < 0.1f || BattleManager.Instance.roundOver)
+        {
+            _characterModel.characterInput = new CharacterModel.CharacterInput();
+            return;
+        }
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 

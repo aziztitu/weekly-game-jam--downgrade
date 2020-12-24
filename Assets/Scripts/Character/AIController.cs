@@ -189,6 +189,13 @@ public class AIController : MonoBehaviour
         postAttackTimer.Update();
         postOpponentAttackTimer.Update();
 
+
+        if (Time.timeScale < 0.1f || BattleManager.Instance.roundOver)
+        {
+            characterModel.characterInput = new CharacterModel.CharacterInput();
+            return;
+        }
+
         var newInput = new CharacterModel.CharacterInput();
 
         if (isOutsidePrefferedRange || isOutsideCombatRange)

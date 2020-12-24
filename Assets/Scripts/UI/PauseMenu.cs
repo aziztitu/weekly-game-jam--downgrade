@@ -42,6 +42,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Restart()
     {
+        GameManager.Instance.battleData = new BattleManager.BattleData();
         GameManager.Instance.RestartCurrentScene();
     }
 

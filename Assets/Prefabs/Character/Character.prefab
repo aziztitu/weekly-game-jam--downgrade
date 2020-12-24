@@ -460,50 +460,50 @@ MonoBehaviour:
     max: 8
   combatActionTimer:
     durationRange:
-      min: 0.3
-      max: 1.5
+      min: 0.1
+      max: 0.3
     _elapsedTime: 0
   blockTimer:
     durationRange:
-      min: 3
-      max: 3
+      min: 0.3
+      max: 2
     _elapsedTime: 0
   dodgeTimer:
     durationRange:
-      min: 3
-      max: 3
+      min: 1
+      max: 1
     _elapsedTime: 0
   postAttackTimer:
     durationRange:
-      min: 3
-      max: 3
+      min: 0.4
+      max: 0.5
     _elapsedTime: 0
   postOpponentAttackTimer:
     durationRange:
-      min: 3
-      max: 3
+      min: 0.4
+      max: 0.5
     _elapsedTime: 0
   justAttackedWindow: 0.5
   attackAfterDodgeModifier:
     probability: 0.5
     delta:
-      min: 0
-      max: 0.1
+      min: 0.1
+      max: 0.2
   attackAfterOpponentStrikesModifier:
-    probability: 0.3
+    probability: 0.6
     delta:
-      min: 0
-      max: 0.1
+      min: 0.1
+      max: 0.2
   lightHeavyBaseProbability: 0.8
   heavyIfOppenentShieldsModifier:
-    probability: 0.3
+    probability: 0.8
     delta:
-      min: 0
-      max: 0.1
+      min: 0.2
+      max: 0.4
   heavyIfOppenentParrySpamModifier:
-    probability: 0.75
+    probability: 0.9
     delta:
-      min: 0
+      min: 0.3
       max: 0.6
   defendAfterAttackModifier:
     probability: 0.5
@@ -517,22 +517,22 @@ MonoBehaviour:
       max: 0.5
   blockDodgeBaseProbability: 0.9
   blockAfterAttackModifier:
-    probability: 0.5
+    probability: 0.7
     delta:
       min: 0
-      max: 0.1
+      max: 0.2
   blockOnIncomingAttackModifier:
     probability: 0.8
     delta:
       min: 0.1
       max: 0.2
-  parryOnIncomingAttackProbability: 0.04
+  parryOnIncomingAttackProbability: 0.1
   justDodgedWindow: 0.5
   dodgeRandomModifier:
-    probability: 0.1
+    probability: 0.3
     delta:
       min: 0
-      max: 0.1
+      max: 0.2
   curAggression: 0.5
   moveTargetDist: 15
   moveTargetDistIsMax: 1

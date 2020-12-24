@@ -146,7 +146,7 @@ public class MeleeTest : MonoBehaviour
             return;
         }
 
-        if (!isInHitState)
+        if (!isInHitState && !characterModel.characterMovementController.isDodging)
         {
             if (characterModel.characterInput.LightAttack || characterModel.characterInput.HeavyAttack)
             {

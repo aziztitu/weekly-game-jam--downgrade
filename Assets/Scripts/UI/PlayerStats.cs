@@ -28,6 +28,7 @@ public class PlayerStats : MonoBehaviour
         if (!trackingCharacter)
         {
             root.SetActive(false);
+            return;
         }
 
         root.SetActive(true);
@@ -36,11 +37,15 @@ public class PlayerStats : MonoBehaviour
         playerIcon.gameObject.SetActive(trackingCharacter.isLocalPlayer);
         nameText.text = trackingCharacter.characterSelectionData.character.name;
 
-        for (int i = 0; i < stages.Count; i++)
+        if (BattleManager.Instance?.battleData?.characterStages != null)
         {
-            stages[i].color = BattleManager.Instance.battleData.characterStages[trackingCharacter.characterIndex] > i
-                ? stageActiveColor
-                : stageInActiveColor;
+            for (int i = 0; i < stages.Count; i++)
+            {
+                stages[i].color = BattleManager.Instance.battleData.characterStages[trackingCharacter.characterIndex] >
+                                  i
+                    ? stageActiveColor
+                    : stageInActiveColor;
+            }
         }
     }
 }
