@@ -13,6 +13,7 @@ public class CameraFollow : MonoBehaviour
     public float switchAngleTolerance = 1f;
 
     public bool moveInsideFollowTarget = true;
+    public bool disableAimWhileSwitching = true;
 
     public Transform targetFollow { get; private set; }
     public Transform lookAtTarget { get; private set; }
@@ -31,7 +32,7 @@ public class CameraFollow : MonoBehaviour
 
         OnSwitchingStarted += () =>
         {
-            if (pov)
+            if (disableAimWhileSwitching && pov)
             {
                 pov.enabled = false;
             }
@@ -42,7 +43,10 @@ public class CameraFollow : MonoBehaviour
             if (pov)
             {
                 pov.ResetRotation(_virtualCamera.transform.rotation);
-                pov.enabled = true;
+                if (disableAimWhileSwitching)
+                {
+                    pov.enabled = true;
+                }
             }
         };
     }

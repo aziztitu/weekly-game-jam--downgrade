@@ -378,7 +378,8 @@ public class CharacterMovementController : MonoBehaviour
 
         bool justDodged = !isDodging && timeSinceDodgeStart >= dodgeDuration &&
                           timeSinceDodgeStart < dodgeDuration * 8;
-        if (desiredMove.magnitude > 0 || justDodged || (characterModel.characterMeleeController.attemptingToShield))
+        if (desiredMove.magnitude > 0 || justDodged ||
+            (characterModel.characterMeleeController.attemptingToShield))
         {
             TurnTowardsLockedTarget();
         }

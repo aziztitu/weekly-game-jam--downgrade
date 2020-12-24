@@ -42,8 +42,11 @@ public class ThirdPersonCamera : SingletonMonoBehaviour<ThirdPersonCamera>
 
         _statefulCinemachineCamera.OnActivated.AddListener(statefulCineCam =>
         {
-            cameraFollow.SetFollow(targetObject);
-            _statefulCinemachineCamera.CamNoise(0, 0);
+            if (targetObject)
+            {
+                cameraFollow.SetFollow(targetObject);
+                _statefulCinemachineCamera.CamNoise(0, 0);
+            }
         });
     }
 
