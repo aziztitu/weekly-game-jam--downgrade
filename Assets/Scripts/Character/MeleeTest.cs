@@ -35,10 +35,10 @@ public class MeleeTest : MonoBehaviour
     [ReadOnly] public SimpleTimer shieldTimer = new SimpleTimer(0);
 
     public bool attemptingToShield =>
-        !isAttackSequenceActive && !isInHitState && characterModel.characterInput.IsBlocking;
+        !isAttackSequenceActive && characterModel.characterInput.IsBlocking;
 
     private bool wasAttemptingToShield = false;
-    public bool isShielding => currentShield && attemptingToShield;
+    public bool isShielding => currentShield && !isInHitState && attemptingToShield;
     public bool isInHitState = false;
     public bool isInParryWindow => parryTimer.elapsedTime < parryWindow;
     [HideInInspector] public bool disableParry = false;
@@ -165,17 +165,20 @@ public class MeleeTest : MonoBehaviour
                     anim.SetTrigger("Attack");
                 }
             }
+        }
 
-            if (attemptingToShield && !wasAttemptingToShield)
+        if (attemptingToShield && !wasAttemptingToShield)
+        {
+            disableParry = !characterModel.characterInput.AttemptParry || !parryTimer.expired;
+            if (!disableParry)
+            {
+                continuousParryAttempts++;
+                parryTimer.Reset();
+            }
+
+            if (isShielding)
             {
                 shieldTimer.Reset();
-
-                disableParry = !characterModel.characterInput.AttemptParry || !parryTimer.expired;
-                if (!disableParry)
-                {
-                    continuousParryAttempts++;
-                    parryTimer.Reset();
-                }
             }
         }
 
@@ -296,17 +299,16 @@ public class MeleeTest : MonoBehaviour
     public bool OnIncomingAttack(CharacterModel attacker, float damage, out bool parried)
     {
         parried = false;
+        if (attemptingToShield && isInParryWindow && !disableParry)
+        {
+            parried = true;
+            Parry(attacker);
+            return false;
+        }
 
         var isHeavyAttack = attacker.characterMeleeController.isHeavyAttackSequenceActive;
         if (!isHeavyAttack)
         {
-            if (attemptingToShield && isInParryWindow && !disableParry)
-            {
-                parried = true;
-                Parry(attacker);
-                return false;
-            }
-
             if (isShielding && CanBlock(attacker.transform.position))
             {
                 anim.SetTrigger("ShieldImpact");

@@ -93,6 +93,7 @@ public class AIController : MonoBehaviour
     [Header("Misc")] public RangeFloat updateMoveTargetIntervalRange = new RangeFloat(2, 4);
     public float updateMoveTargetInterval => updateMoveTargetIntervalRange.selected;
     [SerializeField] [ReadOnly] private float timeSinceLastUpdateMoveTarget = float.MaxValue;
+    public bool drawGizmos = true;
 
     private CharacterModel targetCharacter => characterModel?.lockedOnTarget?.GetComponent<CharacterModel>();
     private float distFromTarget => Vector3.Distance(transform.position, targetCharacter.transform.position);
@@ -149,6 +150,11 @@ public class AIController : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        if (!drawGizmos)
+        {
+            return;
+        }
+
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(transform.position, stats.preferredDistFromTargetRange.min);
         Gizmos.DrawWireSphere(transform.position, stats.preferredDistFromTargetRange.max);
@@ -195,6 +201,7 @@ public class AIController : MonoBehaviour
                     // TODO: Make use of stats to decide dodge
                     if (dodgeOutsideCombatTimer.expired && TestProbability(dodgeOutsideCombatProbability))
                     {
+                        newInput.Move = new Vector3(0, 0, 1);
                         newInput.Dodge = true;
                         dodgeOutsideCombatTimer.Reset();
                     }
