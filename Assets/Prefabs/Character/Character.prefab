@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 4468325815869187378}
   - component: {fileID: 4468325815869187381}
   - component: {fileID: 1589169766842277585}
+  - component: {fileID: 528672088662016204}
   m_Layer: 0
   m_Name: Character
   m_TagString: Character
@@ -601,6 +602,60 @@ MonoBehaviour:
     max: 4
   timeSinceLastUpdateMoveTarget: 3.4028235e+38
   drawGizmos: 0
+--- !u!114 &528672088662016204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4468325815869187388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 6a610b99c52f20446a11bc0aebb4d951, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 19d9ce22-c967-4172-b039-2cf5a6a9b55d
+    m_ActionName: PlayerController/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 750a8660-9e4b-4e92-8177-f56595ae48f9
+    m_ActionName: PlayerController/LightAttack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c96c655f-0ec3-49d1-bc70-e9a3f4f600a5
+    m_ActionName: PlayerController/HeavyAttack[/Keyboard/leftShift,/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1b6c6b43-dd7c-42b3-8870-5807c74c30bf
+    m_ActionName: PlayerController/DodgeRoll[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f8bf2668-d715-46b2-a787-61d4918c10f7
+    m_ActionName: PlayerController/Block[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b90c4c1f-9191-48cf-aeb4-1c91bfba3c32
+    m_ActionName: PlayerController/Pause[/Keyboard/escape]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: PlayerController
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &4468325815937701775
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,9 +1045,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
---- !u!1 &8968091235014740596 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
+--- !u!4 &113050008554822354 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1070232985009656329, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
   m_PrefabInstance: {fileID: 8121228897587312421}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8592551266514194638 stripped
@@ -1000,13 +1055,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
   m_PrefabInstance: {fileID: 8121228897587312421}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8968091235014740596 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
+  m_PrefabInstance: {fileID: 8121228897587312421}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1592177993192560968 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1824824446595371411, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
-  m_PrefabInstance: {fileID: 8121228897587312421}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &113050008554822354 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -1070232985009656329, guid: 21ad00662e6c2f04bb8c9ab61912c33e, type: 3}
   m_PrefabInstance: {fileID: 8121228897587312421}
   m_PrefabAsset: {fileID: 0}

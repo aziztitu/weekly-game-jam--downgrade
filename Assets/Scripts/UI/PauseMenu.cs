@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -27,16 +28,18 @@ public class PauseMenu : MonoBehaviour
     void Update()
     {
         //Checks to pause game
-        if (Input.GetButtonDown("Pause"))
+        
+    }
+
+    void OnPause()
+    {
+        if (paused)
         {
-            if (paused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
         }
     }
 
