@@ -14,17 +14,25 @@
                     "interactions": ""
                 },
                 {
-                    "name": "HeavyAttack",
+                    "name": "LightAttack",
                     "type": "Button",
-                    "id": "c96c655f-0ec3-49d1-bc70-e9a3f4f600a5",
+                    "id": "750a8660-9e4b-4e92-8177-f56595ae48f9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "LightAttack",
+                    "name": "HeavyAttackHelperMouse",
                     "type": "Button",
-                    "id": "750a8660-9e4b-4e92-8177-f56595ae48f9",
+                    "id": "dada3469-a24e-438c-b4ae-8ea193b14e81",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "HeavyAttack",
+                    "type": "Button",
+                    "id": "c96c655f-0ec3-49d1-bc70-e9a3f4f600a5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -221,37 +229,26 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "Button With One Modifier",
-                    "id": "a35922b2-6478-4b19-9a15-a2bb3c94fc93",
-                    "path": "ButtonWithOneModifier",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "",
-                    "action": "HeavyAttack",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "modifier",
-                    "id": "dda07ed0-2f6d-467c-b891-e95916d2bb04",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard",
-                    "action": "HeavyAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "button",
-                    "id": "6318b43c-d5a5-4189-a74a-f17b5ecda4c8",
+                    "name": "",
+                    "id": "41dc3663-b708-4a79-a9df-5119596056af",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "HeavyAttack",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f35c052-2f6b-47ee-8fac-c78d135acbcd",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "HeavyAttackHelperMouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

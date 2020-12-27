@@ -8,11 +8,12 @@ public class PlayerInputController : MonoBehaviour
     PlayerInput playerInput;
     InputAction movement;
     InputAction lightAttack;
+    InputAction heavyHelper;
     InputAction heavyAttack;
     InputAction dodge;
     InputAction block;
 
-    bool test;
+    bool isHeavyHelper;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class PlayerInputController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         movement = playerInput.actions["Movement"];
         lightAttack = playerInput.actions["LightAttack"];
+        heavyHelper = playerInput.actions["HeavyAttackHelperMouse"];
         heavyAttack = playerInput.actions["HeavyAttack"];
         dodge = playerInput.actions["DodgeRoll"];
         block = playerInput.actions["Block"];
@@ -29,8 +31,6 @@ public class PlayerInputController : MonoBehaviour
     public void Update()
     {
         UpdatePlayerInput();
-
-        Debug.Log(_characterModel.characterInput.AttemptParry);
     }
 
     public void UpdatePlayerInput()
@@ -41,15 +41,27 @@ public class PlayerInputController : MonoBehaviour
             return;
         }
 
+        //Gets movement
         Vector2 movementValue = movement.ReadValue<Vector2>();
-
         _characterModel.characterInput.Move = new Vector3(movementValue.x, 0f, movementValue.y);
-        _characterModel.characterInput.AttemptParry = block.triggered;
-        //_characterModel.characterInput.IsBlocking = block.triggered; ///TODO: Figure out how to recreate a GetButton() event.
 
+        //Resets parry attempt for next frame
+        if (_characterModel.characterInput.AttemptParry)
+        {
+            _characterModel.characterInput.AttemptParry = false;
+        }
+        
+        //Resets heavy attack for next frame
+        if (_characterModel.characterInput.HeavyAttack)
+        {
+            _characterModel.characterInput.HeavyAttack = false;
+        }
+
+        //Checks to see if the character has started blocking, if they have, set parry to true
         if (!_characterModel.characterInput.IsBlocking)
         {
             block.started += Block_started =>  _characterModel.characterInput.IsBlocking = true;
+            block.started += Parry_started => _characterModel.characterInput.AttemptParry = true;
         }
         else
         {
@@ -57,11 +69,26 @@ public class PlayerInputController : MonoBehaviour
         }
 
         _characterModel.characterInput.Dodge = dodge.triggered;
+
+        //Checks to see if shift is being pressed down for heavy keyboard & mouse attack
+        if (!isHeavyHelper)
+        {
+            heavyHelper.started += Heavy_started => isHeavyHelper = true;
+        }
+        else
+        {
+            heavyHelper.canceled += Heavy_stopped => isHeavyHelper = false;
+        }
+        
+
+        if (isHeavyHelper)
+        {
+            _characterModel.characterInput.HeavyAttack = heavyAttack.triggered;
+        }
+
+        _characterModel.characterInput.LightAttack = !_characterModel.characterInput.HeavyAttack && lightAttack.triggered;
         //_characterModel.characterInput.Sprint = Input.GetButton("Sprint");
 
-        _characterModel.characterInput.HeavyAttack = heavyAttack.triggered;
-        _characterModel.characterInput.LightAttack = !_characterModel.characterInput.HeavyAttack && lightAttack.triggered;
-        ///TODO: Find out why shift continues the light attack. Find out how to make shift not activate the heavy attack.
 
         //float horizontal = Input.GetAxis("Horizontal");
         //float vertical = Input.GetAxis("Vertical");
