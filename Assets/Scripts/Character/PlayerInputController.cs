@@ -5,6 +5,10 @@ public class PlayerInputController : MonoBehaviour
 {
     private CharacterModel _characterModel;
 
+    private string PS4ControlSchemeName = "PS4";
+    private string KeyboardControlSchemeName = "Keyboard";
+    private string XBoxControlSchemeName = "Xbox";
+
     PlayerInput playerInput;
     InputAction movement;
     InputAction lightAttack;
@@ -81,7 +85,7 @@ public class PlayerInputController : MonoBehaviour
         }
         
 
-        if (isHeavyHelper)
+        if (isHeavyHelper || (playerInput.currentControlScheme == PS4ControlSchemeName || playerInput.currentControlScheme == XBoxControlSchemeName))
         {
             _characterModel.characterInput.HeavyAttack = heavyAttack.triggered;
         }
